@@ -22,6 +22,7 @@ namespace SKRecording
 
             HandRecorder rightRecorder = new HandRecorder(Handed.Right);
             HandRecorder leftRecorder = new HandRecorder(Handed.Left);
+            HeadRecorder headRecorder = new HeadRecorder();
 
             // rotate
             Pose windowPose = new Pose(0, 0.2f, -0.3f, Quat.LookDir(0, 0, 1));
@@ -47,11 +48,13 @@ namespace SKRecording
                 {
                     rightRecorder.recordHandFrame(Input.Hand(Handed.Right));
                     leftRecorder.recordHandFrame(Input.Hand(Handed.Left));
+                    headRecorder.recordHeadFrame(Input.Head);
                 }
                 else if (playing)
                 {
                     bool rightStillPlaying = rightRecorder.playbackHandFrame();
                     bool lefttStillPlaying = leftRecorder.playbackHandFrame();
+                    bool headStillPlaying = headRecorder.playbackHeadFrame();
                     playing = rightStillPlaying && lefttStillPlaying;
 
                 }
