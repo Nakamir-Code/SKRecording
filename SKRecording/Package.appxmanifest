@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  IgnorableNamespaces="uap mp">
+
+  <Identity
+    Name="6890ae6d-59e4-4e66-bd1c-6af046a8b3c9"
+    Publisher="CN=Nakamir"
+    Version="1.0.0.0" />
+
+  <mp:PhoneIdentity PhoneProductId="6890ae6d-59e4-4e66-bd1c-6af046a8b3c9" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+
+  <Properties>
+    <DisplayName>SKRecording</DisplayName>
+    <PublisherDisplayName>StereoKit</PublisherDisplayName>
+    <Logo>Assets\Logo\Logo-50.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="SKRecording.App">
+      <uap:VisualElements
+        DisplayName="SKRecording"
+        Square150x150Logo="Assets\Logo\Logo-150.png"
+        Square44x44Logo="Assets\Logo\Logo-44.png"
+        Description="SKRecording"
+        BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Logo\Logo-Wide150.png" Square71x71Logo="Assets\Logo\Logo-71.png" Square310x310Logo="Assets\Logo\Logo-310.png">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo"/>
+            <uap:ShowOn Tile="wide310x150Logo"/>
+            <uap:ShowOn Tile="square310x310Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile >
+        <uap:SplashScreen Image="Assets\Logo\Logo-Wide300.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+</Package>

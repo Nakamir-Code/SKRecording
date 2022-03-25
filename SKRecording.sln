@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32126.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SKRecording", "SKRecording\SKRecording.csproj", "{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM64 = Debug|ARM64
+		Debug|x64 = Debug|x64
+		Release|ARM64 = Release|ARM64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Debug|ARM64.Build.0 = Debug|ARM64
+		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Debug|x64.ActiveCfg = Debug|x64
+		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Debug|x64.Build.0 = Debug|x64
+		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Debug|x64.Deploy.0 = Debug|x64
+		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Release|ARM64.ActiveCfg = Release|ARM64
+		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Release|ARM64.Build.0 = Release|ARM64
+		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Release|ARM64.Deploy.0 = Release|ARM64
+		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Release|x64.ActiveCfg = Release|x64
+		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Release|x64.Build.0 = Release|x64
+		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Release|x64.Deploy.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EC771C66-970A-4D7B-9C61-26640D72D2D4}
+	EndGlobalSection
+EndGlobal
