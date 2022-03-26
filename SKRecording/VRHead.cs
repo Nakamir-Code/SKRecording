@@ -3,30 +3,23 @@
 namespace SKRecording
 {
 
-    public static class VRHead
+    public class VRHead : ModelWrapper
     {
-        static Model headModel;
-        static bool initialized;
-        static float nodeScale;
-        static Quat defaultRot;
+        private Model headModel;
+        private float nodeScale;
+        private Quat defaultRot;
 
 
-        public static void init()
+        public VRHead()
         {
-            if (initialized)
-            {
-                return;
-            }
-            initialized = true;
             headModel = Model.FromFile("head_11k_centered.obj");
             nodeScale = 1;
             defaultRot = Quat.FromAngles(0, 180f, 0);
-
         }
 
-        public static void showHead(Pose pose)
+        public void show(Pose[] pose)
         {
-            headModel.RootNode.ModelTransform = Matrix.TRS(pose.position, pose.orientation * defaultRot, nodeScale);
+            headModel.RootNode.ModelTransform = Matrix.TRS(pose[0].position, pose[0].orientation * defaultRot, nodeScale);
             headModel.Draw(Matrix.Identity);
         }
     }

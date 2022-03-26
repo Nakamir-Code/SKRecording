@@ -2,43 +2,41 @@
 
 namespace SKRecording
 {
-    class HandRecorder
+    class HandRecorder : Recorder
     {
-        private DynamicLocalRecorderPlaybacker recorder;
-        private JsonCoder coder;
+        private ModelWrapper handModel;
         private Handed whichHand;
 
-        public HandRecorder(Handed whichHand, string recPath = null)
+        public HandRecorder(Handed whichHand)
         {
-            recorder = new DynamicLocalRecorderPlaybacker(recPath);
-            coder = new JsonCoder();
+            handModel = new VRHand(whichHand);
             this.whichHand = whichHand;
-            VRHands.init();
         }
 
-        public void setRecPath(string recPath)
+        public Pose[] getCurrentFrame()
         {
-            recorder = new DynamicLocalRecorderPlaybacker(recPath);
+            return handJointsToPoseArray(Input.Hand(whichHand).fingers);
         }
 
-        public void recordHandFrame(StereoKit.Hand hand)
+        public void displayFrame(Pose[] poses)
         {
-            string recording = coder.Serialize(coder.handJointsToDeserializedHandPose(hand.fingers));
-            recorder.RecordOneFrame(recording);
+            handModel.show(poses);
         }
 
-        public bool playbackHandFrame()
+        public int getPoseCount()
         {
-            string position = recorder.PlaybackOneFrame();
-            if (position == null) return false;
-            HandJoint[] joints = coder.deserializedHandPoseToHandJoints(coder.Deserialize<DeserializedHandPose>(position));
-            VRHands.ShowHand(whichHand, joints);
-            return true;
+            return 25;
         }
 
-        public bool hasRecording()
+        private static Pose[] handJointsToPoseArray(HandJoint[] joints)
         {
-            return recorder.hasRecording();
+            Pose[] poses = new Pose[joints.Length];
+
+            for (int i = 0; i < joints.Length; i++)
+            {
+                poses[i] = new Pose(joints[i].position, joints[i].orientation);
+            }
+            return poses;
         }
     }
 }

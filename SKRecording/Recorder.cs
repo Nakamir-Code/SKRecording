@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using StereoKit;
 namespace SKRecording
 {
     interface Recorder
     {
-        void RecordOneFrame(string content);
+        Pose[] getCurrentFrame();
+        void displayFrame(Pose[] poses);
+        int getPoseCount();
     }
 }

@@ -24,6 +24,9 @@ namespace SKRecording
             HandRecorder leftRecorder = new HandRecorder(Handed.Left);
             HeadRecorder headRecorder = new HeadRecorder();
 
+            Recorder[] recorders = new Recorder[] { rightRecorder, leftRecorder, headRecorder };
+            DynamicRecorderAggregator aggregator = new DynamicRecorderAggregator(recorders);
+
             // rotate
             Pose windowPose = new Pose(0, 0.2f, -0.3f, Quat.LookDir(0, 0, 1));
 
@@ -38,7 +41,7 @@ namespace SKRecording
                 {
                     UI.Toggle(recording ? "Stop Recording" : "Record", ref recording);
                 }
-                if (rightRecorder.hasRecording() && !recording)
+                if (aggregator.hasRecording() && !recording)
                 {
                     UI.Toggle(playing ? "Stop Playing" : "Play", ref playing);
                 }
@@ -46,17 +49,11 @@ namespace SKRecording
 
                 if (recording)
                 {
-                    rightRecorder.recordHandFrame(Input.Hand(Handed.Right));
-                    leftRecorder.recordHandFrame(Input.Hand(Handed.Left));
-                    headRecorder.recordHeadFrame(Input.Head);
+                    aggregator.RecordOneFrame();
                 }
                 else if (playing)
                 {
-                    bool rightStillPlaying = rightRecorder.playbackHandFrame();
-                    bool lefttStillPlaying = leftRecorder.playbackHandFrame();
-                    bool headStillPlaying = headRecorder.playbackHeadFrame();
-                    playing = rightStillPlaying && lefttStillPlaying;
-
+                    playing = aggregator.PlaybackOneFrame();
                 }
 
             })) ;

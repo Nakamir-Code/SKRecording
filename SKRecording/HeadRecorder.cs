@@ -2,41 +2,29 @@
 
 namespace SKRecording
 {
-    class HeadRecorder
+    class HeadRecorder : Recorder
     {
-        private DynamicLocalRecorderPlaybacker recorder;
-        private JsonCoder coder;
+        private ModelWrapper headModel;
 
-        public HeadRecorder(string recPath = null)
+        public HeadRecorder()
         {
-            recorder = new DynamicLocalRecorderPlaybacker(recPath);
-            coder = new JsonCoder();
-            VRHead.init();
+            headModel = new VRHead();
         }
 
-        public void setRecPath(string recPath)
+        public Pose[] getCurrentFrame()
         {
-            recorder = new DynamicLocalRecorderPlaybacker(recPath);
+            Pose[] res = { Input.Head };
+            return res;
         }
 
-        public void recordHeadFrame(Pose head)
+        public void displayFrame(Pose[] poses)
         {
-            string recording = coder.Serialize(coder.poseToDeserializedPose(head));
-            recorder.RecordOneFrame(recording);
+            headModel.show(poses);
         }
 
-        public bool playbackHeadFrame()
+        public int getPoseCount()
         {
-            string position = recorder.PlaybackOneFrame();
-            if (position == null) return false;
-            Pose pose = coder.deserializedPoseToPose(coder.Deserialize<DeserializedPose>(position));
-            VRHead.showHead(pose);
-            return true;
-        }
-
-        public bool hasRecording()
-        {
-            return recorder.hasRecording();
+            return 1;
         }
     }
 }

@@ -71,19 +71,19 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DeserializedHandPose.cs" />
+    <Compile Include="DeserializedPoseArray.cs" />
     <Compile Include="DeserializedPose.cs" />
-    <Compile Include="DynamicLocalRecorderPlaybacker.cs" />
+    <Compile Include="DynamicRecorderAggregator.cs" />
+    <Compile Include="GroupedRecorderPlaybacker.cs" />
     <Compile Include="HandRecorder.cs" />
     <Compile Include="HeadRecorder.cs" />
     <Compile Include="JSONCoder.cs" />
-    <Compile Include="LocalPlaybacker.cs" />
-    <Compile Include="LocalRecorder.cs" />
+    <Compile Include="ModelWrapper.cs" />
     <Compile Include="Playbacker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recorder.cs" />
-    <Compile Include="VRHands.cs" />
+    <Compile Include="VRHand.cs" />
     <Compile Include="VRHead.cs" />
   </ItemGroup>
   <ItemGroup>
