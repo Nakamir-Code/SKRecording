@@ -74,7 +74,6 @@
     <Compile Include="DeserializedPoseArray.cs" />
     <Compile Include="DeserializedPose.cs" />
     <Compile Include="DynamicRecorderAggregator.cs" />
-    <Compile Include="GroupedRecorderPlaybacker.cs" />
     <Compile Include="HandRecorder.cs" />
     <Compile Include="HeadRecorder.cs" />
     <Compile Include="JSONCoder.cs" />
@@ -83,6 +82,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recorder.cs" />
+    <Compile Include="RecordingAggregator.cs" />
+    <Compile Include="RemoteRecordingAggregator.cs" />
     <Compile Include="VRHand.cs" />
     <Compile Include="VRHead.cs" />
   </ItemGroup>
@@ -115,6 +116,9 @@
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="StereoKit" Version="0.3.*" />
+    <PackageReference Include="SuperSimpleTcp">
+      <Version>2.6.0.6</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

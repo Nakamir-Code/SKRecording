@@ -1,7 +1,0 @@
-﻿namespace SKRecording
-{
-    class GroupedRecorderPlaybacker
-    {
-
-    }
-}

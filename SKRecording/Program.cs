@@ -24,14 +24,18 @@ namespace SKRecording
             HandRecorder leftRecorder = new HandRecorder(Handed.Left);
             HeadRecorder headRecorder = new HeadRecorder();
 
+            string IP = "10.0.0.5";
+            int port = 12345;
+
             Recorder[] recorders = new Recorder[] { rightRecorder, leftRecorder, headRecorder };
-            DynamicRecorderAggregator aggregator = new DynamicRecorderAggregator(recorders);
+            RecordingAggregator aggregator = new RemoteRecordingAggregator(recorders, IP, port, 100);
 
             // rotate
             Pose windowPose = new Pose(0, 0.2f, -0.3f, Quat.LookDir(0, 0, 1));
 
             bool recording = false;
             bool playing = false;
+            bool wasPlaying = false;
 
             // Core application loop
             while (SK.Step(() =>
@@ -55,6 +59,13 @@ namespace SKRecording
                 {
                     playing = aggregator.PlaybackOneFrame();
                 }
+
+                if(wasPlaying && !playing)
+                {
+                    aggregator.finishPlayback();
+                }
+
+                wasPlaying = playing;
 
             })) ;
             SK.Shutdown();
