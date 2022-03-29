@@ -13,6 +13,8 @@ namespace SKRecording
         int totalFrameCount;
         int receivedCount;
         bool initiatedPlayback = false;
+        // Intermediate buffer for saving cut-off JSON strings
+        string incompleteJSON = null;
 
         public RemoteRecordingAggregator(Recorder[] recs, string ip, int port, int timeout) : base(recs)
         {
@@ -39,21 +41,34 @@ namespace SKRecording
             string data = System.Text.Encoding.UTF8.GetString(a,decodingStartIndex,a.Length - decodingStartIndex);
             string[] jsonStrs = data.Split(';');
             // First and last json might be cutoff, check
-            int startingIndex = jsonStrs[0].Length != 0 && jsonStrs[0][0] == '{' ? 0 : 1;
+            int startingIndex = 0;
+
+            // Empty string? Skip
+            if(jsonStrs[0].Length == 0)
+            {
+                startingIndex = 1;
+            }
+            // Incomplete string? Start must have been end of last packet since we're using TCP and nothing gets lost
+            else if(jsonStrs[0][0] != '{')
+            {
+                jsonStrs[0] = incompleteJSON + jsonStrs[0];
+                incompleteJSON = null;
+            }
+
             // Last character of the last element in jsonStrs
-            int iterationCount;
+            int iterationCount = jsonStrs.Length;
             string lastElement = jsonStrs[jsonStrs.Length - 1];
 
-            if (! (lastElement.Length == 0) && lastElement[lastElement.Length-1] == '}')
+            // Again, skip empty strings
+            if (lastElement.Length == 0)
             {
-                iterationCount = jsonStrs.Length;
+                iterationCount = jsonStrs.Length-1;
             }
-            else
+            // Incomplete? Rest will come in next packet.
+            else if (lastElement[lastElement.Length-1] != '}')
             {
+                incompleteJSON = lastElement;
                 iterationCount = jsonStrs.Length - 1;
-                // Since we are skipping a frame, still save that we processed it. We do this only when skipping
-                // frames at the end, as if we did it for front AND back we'd be counting frames double
-                receivedCount++;
             }
 
             lock (recording)
