@@ -83,7 +83,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recorder.cs" />
     <Compile Include="RecordingAggregator.cs" />
+    <Compile Include="RecordingTCPClient.cs" />
     <Compile Include="RemoteRecordingAggregator.cs" />
+    <Compile Include="TCPClient.cs" />
     <Compile Include="VRHand.cs" />
     <Compile Include="VRHead.cs" />
   </ItemGroup>

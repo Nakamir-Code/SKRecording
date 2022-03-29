@@ -28,7 +28,7 @@ namespace SKRecording
             int port = 12345;
 
             Recorder[] recorders = new Recorder[] { rightRecorder, leftRecorder, headRecorder };
-            RecordingAggregator aggregator = new RemoteRecordingAggregator(recorders, IP, port, 100);
+            RecordingAggregator aggregator = new RemoteRecordingAggregator(recorders, IP, port);
 
             // rotate
             Pose windowPose = new Pose(0, 0.2f, -0.3f, Quat.LookDir(0, 0, 1));
@@ -36,6 +36,8 @@ namespace SKRecording
             bool recording = false;
             bool playing = false;
             bool wasPlaying = false;
+            System.Diagnostics.Debug.WriteLine("GO!");
+
 
             // Core application loop
             while (SK.Step(() =>
