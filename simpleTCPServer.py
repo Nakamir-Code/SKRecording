@@ -56,7 +56,8 @@ class SimpleTCPServer():
                         for frame in frames:
                             self.recording.append(frame)
 
-            finally:
+            except:
+                print("Client disconnected")
                 connection.close()
 
 def main():

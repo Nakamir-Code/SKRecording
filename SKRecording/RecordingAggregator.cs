@@ -46,7 +46,7 @@ namespace SKRecording
         }
 
         // To be called after recording is finished
-        public virtual void finishRecorder()
+        public virtual void finishRecording()
         { 
             return;
         }

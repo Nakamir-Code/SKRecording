@@ -10,12 +10,12 @@ namespace SKRecording
         Queue<string> recording;
         JsonCoder coder;
         bool initiatedPlayback = false;
+        bool connected = false;
 
         public RemoteRecordingAggregator(Recorder[] recs, string ip, int port) : base(recs)
         {
             client = new RecordingTCPClient(ip, port);
             client.decodedFrame += onDecodedFrame;
-            client.start();
             this.recording = new Queue<string>();
             this.coder = new JsonCoder();
         }
@@ -38,6 +38,12 @@ namespace SKRecording
 
         public override bool PlaybackOneFrame()
         {
+            if (!connected)
+            {
+                client.connect();
+                connected = true;
+            }
+
             if (!initiatedPlayback)
             {
                 client.send("P", true);
@@ -79,6 +85,11 @@ namespace SKRecording
 
         public override void RecordOneFrame()
         {
+            if (!connected)
+            {
+                client.connect();
+                connected = true;
+            }
             Pose[] poses = getCurrentPoses();
             string serializedPoses = coder.Serialize(DeserializedPoseArray.fromPoseArray(poses));
             client.send(serializedPoses);
@@ -87,7 +98,16 @@ namespace SKRecording
         public override void finishPlayback()
         {
             client.reset();
+            connected = false;
             initiatedPlayback = false;
         }
+
+        public override void finishRecording()
+        {
+            client.reset();
+            connected = false;
+        }
+
+
     }
 }

@@ -1,5 +1,6 @@
 using StereoKit;
 using System;
+using System.Net;
 
 namespace SKRecording
 {
@@ -24,32 +25,43 @@ namespace SKRecording
             HandRecorder leftRecorder = new HandRecorder(Handed.Left);
             HeadRecorder headRecorder = new HeadRecorder();
 
-            string IP = "10.0.0.5";
+            string IP = "10.0.0.6";
             int port = 12345;
+            string hostName = Dns.GetHostName();
+            string myIP = Utils.GetLocalIPAddress();
+
 
             Recorder[] recorders = new Recorder[] { rightRecorder, leftRecorder, headRecorder };
             RecordingAggregator aggregator = new RemoteRecordingAggregator(recorders, IP, port);
+            RecordingAggregator streamReceiver = new ReceiveStreamAggregator(recorders, myIP, port, 100);
 
             // rotate
             Pose windowPose = new Pose(0, 0.2f, -0.3f, Quat.LookDir(0, 0, 1));
 
             bool recording = false;
             bool playing = false;
-            bool wasPlaying = false;
-            System.Diagnostics.Debug.WriteLine("GO!");
-
+            bool receivingStream = false;
+            bool wasRecording = false;
 
             // Core application loop
             while (SK.Step(() =>
             {
                 UI.WindowBegin("Window", ref windowPose, new Vec2(20, 0) * U.cm);
-                if (!playing)
+                if (!playing && !receivingStream)
                 {
                     UI.Toggle(recording ? "Stop Recording" : "Record", ref recording);
                 }
-                if (aggregator.hasRecording() && !recording)
+                if (aggregator.hasRecording() && !recording && !receivingStream)
                 {
                     UI.Toggle(playing ? "Stop Playing" : "Play", ref playing);
+                }
+                if (!playing && !receivingStream)
+                {
+                    UI.Toggle(playing ? "Stop Streaming" : "Stream", ref recording);
+                }
+                if (!recording && !playing)
+                {
+                    UI.Toggle(receivingStream ? "Stop Receiving" : "Start Receiving", ref receivingStream);
                 }
                 UI.WindowEnd();
 
@@ -60,14 +72,26 @@ namespace SKRecording
                 else if (playing)
                 {
                     playing = aggregator.PlaybackOneFrame();
+                    if (!playing)
+                    {
+                        aggregator.finishPlayback();
+                    }
                 }
-
-                if(wasPlaying && !playing)
+                else if (receivingStream)
                 {
-                    aggregator.finishPlayback();
+                    receivingStream = streamReceiver.PlaybackOneFrame();
+                    if (!receivingStream)
+                    {
+                        streamReceiver.finishPlayback();
+                    }
                 }
 
-                wasPlaying = playing;
+                if(wasRecording && !recording)
+                {
+                    aggregator.finishRecording();
+                }
+
+                wasRecording = recording;
 
             })) ;
             SK.Shutdown();

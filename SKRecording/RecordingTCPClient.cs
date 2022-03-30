@@ -29,6 +29,7 @@ namespace SKRecording
 
         public override void reset()
         {
+            disconnect();
             receivedCount = 0;
             totalFrameCount = -1;
         }
