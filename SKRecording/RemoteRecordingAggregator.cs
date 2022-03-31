@@ -36,7 +36,7 @@ namespace SKRecording
             return true;
         }
 
-        public override bool PlaybackOneFrame()
+        public override bool PlaybackOneFrame(Matrix anchorTRS)
         {
             if (!connected)
             {
@@ -64,7 +64,7 @@ namespace SKRecording
                 try
                 {
                     Pose[] frame = coder.Deserialize<DeserializedPoseArray>(frameJSON).toPoseArray();
-                    displayPoses(frame);
+                    displayPoses(frame, anchorTRS);
                 }
                 catch (Exception e)
                 {
@@ -83,14 +83,14 @@ namespace SKRecording
             return true;
         }
 
-        public override void RecordOneFrame()
+        public override void RecordOneFrame(Matrix anchorTRS)
         {
             if (!connected)
             {
                 client.connect();
                 connected = true;
             }
-            Pose[] poses = getCurrentPoses();
+            Pose[] poses = getCurrentPoses(anchorTRS);
             string serializedPoses = coder.Serialize(DeserializedPoseArray.fromPoseArray(poses));
             client.send(serializedPoses);
         }

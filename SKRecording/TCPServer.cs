@@ -14,7 +14,6 @@ namespace SKRecording
             clientIPPorts = new List<string>();
             server = new SimpleTcpServer(ip + ":" + port);
             server.Events.DataReceived += OnDataReceived;
-            server.Events.DataReceived += OnDataReceived;
             server.Events.ClientDisconnected += OnDisconnected;
             server.Events.ClientConnected += OnConnected;
         }

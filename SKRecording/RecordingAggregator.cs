@@ -23,23 +23,32 @@ namespace SKRecording
 
         }
 
-        protected Pose[] getCurrentPoses()
+        // This is used on the sending side, meanong we get the poses relative to worldspace and need to convert them to our anchor
+        protected Pose[] getCurrentPoses(Matrix worldAnchorTRS)
         {
-            int i = 0;
-            foreach (Recorder r in recorders)
+            Matrix inversedWorldAnchor = worldAnchorTRS.Inverse;
+            for( int i = 0; i<recorders.Length; i++)
             {
-                r.getCurrentFrame().CopyTo(poseAggregator, i);
-                i += +r.getPoseCount();
+                Pose[] poses = recorders[i].getCurrentFrame();
+                for(int j =0; j<poses.Length; j++)
+                {
+                    poseAggregator[i + j] = (inversedWorldAnchor * poses[j].ToMatrix()).Pose;
+                }
             }
 
             return poseAggregator;
         }
-
-        protected void displayPoses(Pose[] poses)
+        // This is used on the receiving side, meaning we get the poses relative to the anchor and need to convert them to worldspace
+        protected void displayPoses(Pose[] poses, Matrix worldAnchorTRS)
         {
             int i = 0;
             foreach (Recorder r in recorders)
             {
+                for (int j = 0; j < poses.Length; j++)
+                {
+                    Matrix WorldPoseTRS = worldAnchorTRS * poses[j].ToMatrix();
+                    poses[j] = WorldPoseTRS.Pose;
+                }
                 r.displayFrame(new ArraySegment<Pose>(poses, i, r.getPoseCount()).ToArray());
                 i += r.getPoseCount();
             }
@@ -59,8 +68,8 @@ namespace SKRecording
 
 
         // To be implemented by inheritors
-        public abstract bool PlaybackOneFrame();
-        public abstract void RecordOneFrame();
+        public abstract bool PlaybackOneFrame(Matrix anchorTRS);
+        public abstract void RecordOneFrame(Matrix anchorTRS);
         public abstract bool hasRecording();
 
     }

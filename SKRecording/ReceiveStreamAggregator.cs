@@ -40,7 +40,7 @@ namespace SKRecording
             return true;
         }
 
-        public override bool PlaybackOneFrame()
+        public override bool PlaybackOneFrame(Matrix anchorTRS)
         {
             if (!listening)
             {
@@ -67,7 +67,7 @@ namespace SKRecording
                 try
                 {
                     Pose[] frame = coder.Deserialize<DeserializedPoseArray>(frameJSON).toPoseArray();
-                    displayPoses(frame);
+                    displayPoses(frame, anchorTRS);
                 }
                 catch (Exception e)
                 {
@@ -88,7 +88,7 @@ namespace SKRecording
             return true;
         }
 
-        public override void RecordOneFrame()
+        public override void RecordOneFrame(Matrix anchorTRS)
         {
             throw new InvalidOperationException("ReceiveStreamAggregator can only receive");
         }

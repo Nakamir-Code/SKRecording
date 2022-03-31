@@ -14,19 +14,19 @@ namespace SKRecording
             this.coder = new JsonCoder();
         }
 
-        public override void RecordOneFrame()
+        public override void RecordOneFrame(Matrix anchorTRS)
         {
-            Pose[] poses = getCurrentPoses();
+            Pose[] poses = getCurrentPoses(anchorTRS);
             
             recording.Enqueue(coder.Serialize(DeserializedPoseArray.fromPoseArray(poses)));
         }
 
-        public override bool PlaybackOneFrame()
+        public override bool PlaybackOneFrame(Matrix transformation)
         {
             if (recording.Count == 0) return false;
             Pose[] frame = coder.Deserialize<DeserializedPoseArray>(recording.Dequeue()).toPoseArray();
 
-            displayPoses(frame);
+            displayPoses(frame, transformation);
 
             return true;
 

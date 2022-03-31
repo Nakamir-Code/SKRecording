@@ -9,7 +9,6 @@ namespace SKRecording
         private float nodeScale;
         private Quat defaultRot;
 
-
         public VRHead()
         {
             headModel = Model.FromFile("head_11k_centered.obj");
