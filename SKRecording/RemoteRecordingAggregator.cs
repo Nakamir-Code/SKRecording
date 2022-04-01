@@ -68,6 +68,7 @@ namespace SKRecording
                 }
                 catch (Exception e)
                 {
+                    System.Diagnostics.Debug.WriteLine("Caught an exception when deserializing/displaying: " + e.Message);
                     return true;
                 }
             }

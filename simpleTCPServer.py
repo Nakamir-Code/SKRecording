@@ -15,8 +15,6 @@ class SimpleTCPServer():
         if len(frames[0]) == 0:
             start = 1
         elif frames[0][0] != ord('{'):
-            if self.incomplete_JSON is None:
-                print("okkkkk")
             frames[0] = self.incomplete_JSON + frames[0]
             self.incomplete_JSON = None
         

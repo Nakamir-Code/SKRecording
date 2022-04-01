@@ -21,7 +21,7 @@ namespace SKRecording
             Material floorMaterial = new Material(Shader.FromFile("floor.hlsl"));
             floorMaterial.Transparency = Transparency.Blend;
 
-            //HandRecorder rightRecorder = new HandRecorder(Handed.Right);
+            HandRecorder rightRecorder = new HandRecorder(Handed.Right);
             //HandRecorder leftRecorder = new HandRecorder(Handed.Left);
             HeadRecorder headRecorder = new HeadRecorder();
 
@@ -30,7 +30,7 @@ namespace SKRecording
             string myIP = Utils.GetLocalIPAddress();
 
 
-            Recorder[] recorders = new Recorder[] { /*rightRecorder, leftRecorder,*/ headRecorder };
+            Recorder[] recorders = new Recorder[] { headRecorder, rightRecorder/*, leftRecorder*/ };
             RecordingAggregator aggregator = new RemoteRecordingAggregator(recorders, IP, port);
             RecordingAggregator streamReceiver = new ReceiveStreamAggregator(recorders, myIP, port, 100);
 
@@ -46,6 +46,7 @@ namespace SKRecording
             // Core application loop
             while (SK.Step(() =>
             {
+
                 UI.WindowBegin("Window", ref windowPose, new Vec2(20, 0) * U.cm);
                 if (!playing && !receivingStream && !streaming)
                 {

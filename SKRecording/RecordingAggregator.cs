@@ -32,7 +32,9 @@ namespace SKRecording
                 Pose[] poses = recorders[i].getCurrentFrame();
                 for(int j =0; j<poses.Length; j++)
                 {
-                    poseAggregator[i + j] = (inversedWorldAnchor * poses[j].ToMatrix()).Pose;
+                    // The correct multiplication is inversedWorldAnchor * pose. However, matrix multiplication in C# is inverted, meaning if we want to 
+                    // do  A * B, what we write in C# is B*A. More info here: https://stackoverflow.com/questions/58712092/matrix-struct-gives-wrong-output
+                    poseAggregator[i + j] = (poses[j].ToMatrix() * inversedWorldAnchor).Pose;
                 }
             }
 
@@ -41,16 +43,17 @@ namespace SKRecording
         // This is used on the receiving side, meaning we get the poses relative to the anchor and need to convert them to worldspace
         protected void displayPoses(Pose[] poses, Matrix worldAnchorTRS)
         {
-            int i = 0;
-            foreach (Recorder r in recorders)
+            for (int i = 0; i<recorders.Length; i++)
             {
-                for (int j = 0; j < poses.Length; j++)
+                Pose[] toDisplay = new Pose[recorders[i].getPoseCount()];
+                for (int j = 0; j < toDisplay.Length; j++)
                 {
-                    Matrix WorldPoseTRS = worldAnchorTRS * poses[j].ToMatrix();
-                    poses[j] = WorldPoseTRS.Pose;
+                    // The correct multiplication is worldAnchorTRS * pose. However, matrix multiplication in C# is inverted, meaning if we want to 
+                    // do  A * B, what we write in C# is B*A. More info here: https://stackoverflow.com/questions/58712092/matrix-struct-gives-wrong-output
+                    Matrix res = poses[i + j].ToMatrix() * worldAnchorTRS;
+                    toDisplay[j] = res.Pose;
                 }
-                r.displayFrame(new ArraySegment<Pose>(poses, i, r.getPoseCount()).ToArray());
-                i += r.getPoseCount();
+                recorders[i].displayFrame(toDisplay);
             }
         }
 
