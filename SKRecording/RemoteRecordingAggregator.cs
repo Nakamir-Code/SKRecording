@@ -63,8 +63,8 @@ namespace SKRecording
             {
                 try
                 {
-                    Pose[] frame = coder.Deserialize<DeserializedPoseArray>(frameJSON).toPoseArray();
-                    displayPoses(frame, anchorTRS);
+                    RecordingData[] frame = coder.Deserialize<DeserializedRecordingArray>(frameJSON).toRecordingDataArray();
+                    displayAll(frame, anchorTRS);
                 }
                 catch (Exception e)
                 {
@@ -91,9 +91,9 @@ namespace SKRecording
                 client.connect();
                 connected = true;
             }
-            Pose[] poses = getCurrentPoses(anchorTRS);
-            string serializedPoses = coder.Serialize(DeserializedPoseArray.fromPoseArray(poses));
-            client.send(serializedPoses);
+            RecordingData[] data = getCurrentRecordingData(anchorTRS);
+            string serializedRecording = coder.Serialize(DeserializedRecordingArray.fromRecordingDataArray(data));
+            client.send(serializedRecording);
         }
 
         public override void finishPlayback()

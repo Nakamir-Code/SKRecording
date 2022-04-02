@@ -1,10 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Package
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  IgnorableNamespaces="uap mp">
+  xmlns:uap2="http://schemas.microsoft.com/appx/manifest/uap/windows10/2"
+  xmlns:uap6="http://schemas.microsoft.com/appx/manifest/uap/windows10/6"
+  IgnorableNamespaces="uap mp uap2 rescap uap6">
 
   <Identity
     Name="6890ae6d-59e4-4e66-bd1c-6af046a8b3c9"
@@ -50,7 +53,15 @@
   </Applications>
 
   <Capabilities>
-    <Capability Name="internetClientServer"/>
+	<rescap:Capability Name="perceptionSensorsExperimental" />
     <Capability Name="internetClient"/>
-    <Capability Name="privateNetworkClientServer"/></Capabilities>
+    <Capability Name="internetClientServer"/>
+    <Capability Name="privateNetworkClientServer"/>
+    <uap2:Capability Name="spatialPerception"/>
+	<uap6:Capability Name="graphicsCapture"/>
+    <DeviceCapability Name="gazeInput"/>
+    <DeviceCapability Name="microphone"/>
+    <DeviceCapability Name="webcam"/>
+	<DeviceCapability Name="location"/>
+  </Capabilities>
 </Package>

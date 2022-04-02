@@ -71,7 +71,8 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DeserializedPoseArray.cs" />
+    <Compile Include="AnnotationRecorder.cs" />
+    <Compile Include="DeserializedRecordingArray.cs" />
     <Compile Include="DeserializedPose.cs" />
     <Compile Include="DynamicRecorderAggregator.cs" />
     <Compile Include="HandRecorder.cs" />
@@ -84,8 +85,10 @@
     <Compile Include="ReceiveStreamAggregator.cs" />
     <Compile Include="Recorder.cs" />
     <Compile Include="RecordingAggregator.cs" />
+    <Compile Include="RecordingData.cs" />
     <Compile Include="RecordingTCPClient.cs" />
     <Compile Include="RemoteRecordingAggregator.cs" />
+    <Compile Include="StreamerWrapper.cs" />
     <Compile Include="TCPClient.cs" />
     <Compile Include="TCPPeer.cs" />
     <Compile Include="TCPServer.cs" />
@@ -118,6 +121,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.2.9" />
+    <PackageReference Include="Microsoft.Windows.MixedReality.DotNetWinRT">
+      <Version>0.5.1049</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
@@ -141,10 +147,25 @@
     <None Include="Hand_v001.blend" />
     <None Include="Hand_v002.blend" />
   </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="Microsoft.VCLibs, Version=14.0">
+      <Name>Visual C++ 2015-2019 Runtime for Universal Windows Platform Apps</Name>
+    </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\HL2-Research-Mode-Streamer-Unity-Plugin\SimpleStreamer\WinRTComponent\WinRTComponent.vcxproj">
+      <Project>{6b047504-bb89-4432-bbf1-1d67bd44fcc1}</Project>
+      <Name>WinRTComponent</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '16.0' ">
     <VisualStudioVersion>16.0</VisualStudioVersion>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -66,8 +66,8 @@ namespace SKRecording
             {
                 try
                 {
-                    Pose[] frame = coder.Deserialize<DeserializedPoseArray>(frameJSON).toPoseArray();
-                    displayPoses(frame, anchorTRS);
+                    RecordingData[] frame = coder.Deserialize<DeserializedRecordingArray>(frameJSON).toRecordingDataArray();
+                    displayAll(frame, anchorTRS);
                 }
                 catch (Exception e)
                 {

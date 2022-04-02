@@ -1,6 +1,6 @@
 using StereoKit;
 using System;
-using System.Net;
+using Windows.Perception.Spatial;
 
 namespace SKRecording
 {
@@ -31,9 +31,12 @@ namespace SKRecording
 
 
             Recorder[] recorders = new Recorder[] { headRecorder, rightRecorder/*, leftRecorder*/ };
-            RecordingAggregator aggregator = new RemoteRecordingAggregator(recorders, IP, port);
+            RecordingAggregator aggregator = new DynamicRecorderAggregator(recorders);
             RecordingAggregator streamReceiver = new ReceiveStreamAggregator(recorders, myIP, port, 100);
 
+            Pose windowPoseInput = new Pose(0, 0.1f, -0.2f, Quat.Identity);
+            string inputState = "Enter label text";
+            
             // rotate
             Pose windowPose = new Pose(0, 0.2f, -0.3f, Quat.LookDir(0, 0, 1));
             
@@ -46,6 +49,16 @@ namespace SKRecording
             // Core application loop
             while (SK.Step(() =>
             {
+                UI.WindowBegin("Window Input", ref windowPoseInput);
+
+                // Add a small label in front of it on the same line
+                UI.Label("Text:");
+                UI.SameLine();
+                if (UI.Input("Text", ref inputState))
+                    Log.Info($"Input text just changed");
+
+                UI.WindowEnd();
+
 
                 UI.WindowBegin("Window", ref windowPose, new Vec2(20, 0) * U.cm);
                 if (!playing && !receivingStream && !streaming)

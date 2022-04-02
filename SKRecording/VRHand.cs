@@ -66,23 +66,23 @@ namespace SKRecording
         }
 
         // Display a hand with the provided joint information
-        public void show(Pose[] poses)
+        public void show(RecordingData[] data)
         {
-            if (poses.Length != 25)
+            if (data.Length != 25)
             {
                 throw new Exception("Expected exactly 25 joints");
             }
 
             foreach (JointInfo j in jointInfo)
             {
-                Pose joint = GetJoint(poses, j.finger, j.joint);
+                Pose joint = GetJoint(data, j.finger, j.joint).pose;
                 j.node.ModelTransform = Matrix.TRS(joint.position, joint.orientation * defaultBoneRot, nodeScale);
             }
 
             handModel.Draw(Matrix.Identity);
         }
 
-        private Pose GetJoint(Pose[] poses, FingerId finger, JointId joint)
+        private RecordingData GetJoint(RecordingData[] poses, FingerId finger, JointId joint)
         {
             return poses[5 * (int)finger + (int)joint];
         }

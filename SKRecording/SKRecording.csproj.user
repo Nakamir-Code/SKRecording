@@ -12,6 +12,7 @@
     <RemoteDebugMachine>10.0.0.6</RemoteDebugMachine>
     <AuthenticationMode>Universal</AuthenticationMode>
     <RemoteDebugEnabled>false</RemoteDebugEnabled>
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
     <DeviceId>30f105c9-681e-420b-a277-7c086ead8a4e</DeviceId>

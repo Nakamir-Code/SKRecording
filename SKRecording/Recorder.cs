@@ -1,10 +1,9 @@
-﻿using StereoKit;
-namespace SKRecording
+﻿namespace SKRecording
 {
     interface Recorder
     {
-        Pose[] getCurrentFrame();
-        void displayFrame(Pose[] poses);
-        int getPoseCount();
+        RecordingData[] getCurrentFrame();
+        void displayFrame(RecordingData[] recordingData);
+        int getObjectCount();
     }
 }

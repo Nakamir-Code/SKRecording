@@ -4,6 +4,6 @@ namespace SKRecording
 {
     interface ModelWrapper
     {
-        void show(Pose[] pose);
+        void show(RecordingData[] data);
     }
 }

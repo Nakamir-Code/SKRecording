@@ -13,30 +13,30 @@ namespace SKRecording
             this.whichHand = whichHand;
         }
 
-        public Pose[] getCurrentFrame()
+        public RecordingData[] getCurrentFrame()
         {
-            return handJointsToPoseArray(Input.Hand(whichHand).fingers);
+            return handJointsToRecordingDataArray(Input.Hand(whichHand).fingers);
         }
 
-        public void displayFrame(Pose[] poses)
+        public void displayFrame(RecordingData[] data)
         {
-            handModel.show(poses);
+            handModel.show(data);
         }
 
-        public int getPoseCount()
+        public int getObjectCount()
         {
             return 25;
         }
 
-        private static Pose[] handJointsToPoseArray(HandJoint[] joints)
+        private static RecordingData[] handJointsToRecordingDataArray(HandJoint[] joints)
         {
-            Pose[] poses = new Pose[joints.Length];
+            RecordingData[] recordingData = new RecordingData[joints.Length];
 
             for (int i = 0; i < joints.Length; i++)
             {
-                poses[i] = new Pose(joints[i].position, joints[i].orientation);
+                recordingData[i] = new RecordingData(new Pose(joints[i].position, joints[i].orientation));
             }
-            return poses;
+            return recordingData;
         }
     }
 }

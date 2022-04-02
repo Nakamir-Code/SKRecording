@@ -16,9 +16,9 @@ namespace SKRecording
             defaultRot = Quat.FromAngles(0, 180f, 0);
         }
 
-        public void show(Pose[] pose)
+        public void show(RecordingData[] data)
         {
-            headModel.RootNode.ModelTransform = Matrix.TRS(pose[0].position, pose[0].orientation * defaultRot, nodeScale);
+            headModel.RootNode.ModelTransform = Matrix.TRS(data[0].pose.position, data[0].pose.orientation * defaultRot, nodeScale);
             headModel.Draw(Matrix.Identity);
         }
     }

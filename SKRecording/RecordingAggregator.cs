@@ -7,7 +7,7 @@ namespace SKRecording
     {
 
         private Recorder[] recorders;
-        private Pose[] poseAggregator;
+        private RecordingData[] recordingDataAggregator;
         
 
         protected RecordingAggregator(Recorder[] recorders)
@@ -16,42 +16,43 @@ namespace SKRecording
             int poseCount = 0;
             foreach (Recorder r in recorders)
             {
-                poseCount += r.getPoseCount();
+                poseCount += r.getObjectCount();
             }
 
-            poseAggregator = new Pose[poseCount];
+            recordingDataAggregator = new RecordingData[poseCount];
 
         }
 
         // This is used on the sending side, meanong we get the poses relative to worldspace and need to convert them to our anchor
-        protected Pose[] getCurrentPoses(Matrix worldAnchorTRS)
+        protected RecordingData[] getCurrentRecordingData(Matrix worldAnchorTRS)
         {
             Matrix inversedWorldAnchor = worldAnchorTRS.Inverse;
             for( int i = 0; i<recorders.Length; i++)
             {
-                Pose[] poses = recorders[i].getCurrentFrame();
-                for(int j =0; j<poses.Length; j++)
+                RecordingData[] recordingData = recorders[i].getCurrentFrame();
+                for(int j =0; j<recordingData.Length; j++)
                 {
                     // The correct multiplication is inversedWorldAnchor * pose. However, matrix multiplication in C# is inverted, meaning if we want to 
                     // do  A * B, what we write in C# is B*A. More info here: https://stackoverflow.com/questions/58712092/matrix-struct-gives-wrong-output
-                    poseAggregator[i + j] = (poses[j].ToMatrix() * inversedWorldAnchor).Pose;
+                    recordingDataAggregator[i + j] = recordingData[j];
+                    recordingDataAggregator[i + j].pose = (recordingData[j].pose.ToMatrix() * inversedWorldAnchor).Pose;
                 }
             }
 
-            return poseAggregator;
+            return recordingDataAggregator;
         }
         // This is used on the receiving side, meaning we get the poses relative to the anchor and need to convert them to worldspace
-        protected void displayPoses(Pose[] poses, Matrix worldAnchorTRS)
+        protected void displayAll(RecordingData[] recorderDatas, Matrix worldAnchorTRS)
         {
             for (int i = 0; i<recorders.Length; i++)
             {
-                Pose[] toDisplay = new Pose[recorders[i].getPoseCount()];
+                RecordingData[] toDisplay = new RecordingData[recorders[i].getObjectCount()];
                 for (int j = 0; j < toDisplay.Length; j++)
                 {
                     // The correct multiplication is worldAnchorTRS * pose. However, matrix multiplication in C# is inverted, meaning if we want to 
                     // do  A * B, what we write in C# is B*A. More info here: https://stackoverflow.com/questions/58712092/matrix-struct-gives-wrong-output
-                    Matrix res = poses[i + j].ToMatrix() * worldAnchorTRS;
-                    toDisplay[j] = res.Pose;
+                    toDisplay[j] = recorderDatas[i + j];
+                    toDisplay[j].pose = (recorderDatas[i + j].pose.ToMatrix() * worldAnchorTRS).Pose;
                 }
                 recorders[i].displayFrame(toDisplay);
             }

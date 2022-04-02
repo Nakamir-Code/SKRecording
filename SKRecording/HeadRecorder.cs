@@ -11,18 +11,18 @@ namespace SKRecording
             headModel = new VRHead();
         }
 
-        public Pose[] getCurrentFrame()
+        public RecordingData[] getCurrentFrame()
         {
-            Pose[] res = { Input.Head };
+            RecordingData[] res = { new RecordingData(Input.Head) };
             return res;
         }
 
-        public void displayFrame(Pose[] poses)
+        public void displayFrame(RecordingData[] data)
         {
-            headModel.show(poses);
+            headModel.show(data);
         }
 
-        public int getPoseCount()
+        public int getObjectCount()
         {
             return 1;
         }
