@@ -17,16 +17,19 @@ namespace SKRecording
         public override void RecordOneFrame(Matrix anchorTRS)
         {
             RecordingData[] poses = getCurrentRecordingData(anchorTRS);
-            
-            recording.Enqueue(coder.Serialize(DeserializedRecordingArray.fromRecordingDataArray(poses)));
+            int[] paramLengths = getCurrentParamLengths();
+
+            recording.Enqueue(coder.Serialize(DeserializedRecordingArray.fromRecordingDataArray(poses,paramLengths)));
         }
 
         public override bool PlaybackOneFrame(Matrix anchorTRS)
         {
             if (recording.Count == 0) return false;
-            RecordingData[] frame = coder.Deserialize<DeserializedRecordingArray>(recording.Dequeue()).toRecordingDataArray();
+            DeserializedRecordingArray deserialized = coder.Deserialize<DeserializedRecordingArray>(recording.Dequeue());
+            RecordingData[] frame = deserialized.toRecordingDataArray();
+            int[] paramLengths = deserialized.getParamLengths();
 
-            displayAll(frame, anchorTRS);
+            displayAll(frame, paramLengths, anchorTRS);
 
             return true;
 

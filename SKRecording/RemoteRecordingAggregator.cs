@@ -63,8 +63,11 @@ namespace SKRecording
             {
                 try
                 {
-                    RecordingData[] frame = coder.Deserialize<DeserializedRecordingArray>(frameJSON).toRecordingDataArray();
-                    displayAll(frame, anchorTRS);
+                    DeserializedRecordingArray deserialized = coder.Deserialize<DeserializedRecordingArray>(recording.Dequeue());
+                    RecordingData[] frame = deserialized.toRecordingDataArray();
+                    int[] paramLengths = deserialized.getParamLengths();
+
+                    displayAll(frame, paramLengths, anchorTRS);
                 }
                 catch (Exception e)
                 {
@@ -92,7 +95,9 @@ namespace SKRecording
                 connected = true;
             }
             RecordingData[] data = getCurrentRecordingData(anchorTRS);
-            string serializedRecording = coder.Serialize(DeserializedRecordingArray.fromRecordingDataArray(data));
+            int[] paramLengths = getCurrentParamLengths();
+
+            string serializedRecording = coder.Serialize(DeserializedRecordingArray.fromRecordingDataArray(data, paramLengths));
             client.send(serializedRecording);
         }
 

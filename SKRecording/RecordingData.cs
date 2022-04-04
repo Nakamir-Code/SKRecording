@@ -2,8 +2,8 @@
 
 namespace SKRecording
 {
-    // Global struct that is passed around containing data for one object in one frame
-    public struct RecordingData
+    // Global class that is passed around containing data for one object in one frame
+    public class RecordingData
     {
         public Pose pose;
         public string text;
@@ -16,6 +16,10 @@ namespace SKRecording
         {
             this.pose = pose;
             this.text = "";
+        }
+        public RecordingData clone()
+        {
+            return new RecordingData(this.pose, this.text);
         }
     }
 }

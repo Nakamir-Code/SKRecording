@@ -3,6 +3,7 @@ using System.Numerics;
 using System.Net;
 using System.Net.Sockets;
 using StereoKit;
+using System.Collections.Generic;
 
 namespace SKRecording
 {
@@ -31,5 +32,37 @@ namespace SKRecording
             return res;
 
         }
+
+        public static void showAnnotation(RecordingData d)
+        {
+            UI.WindowBegin("", ref d.pose, UIWin.Body, UIMove.None);
+            UI.Label(d.text);
+            UI.WindowEnd();
+
+        }
+
+        public static int sum(int[] summands)
+        {
+            int sum = 0;
+            foreach(int summand in summands)
+            {
+                sum += summand;
+            }
+            return sum;
+        }
+
+        public static void showDeletableAnnotation(RecordingData d, List<RecordingData> annots)
+        {
+            UI.WindowBegin("", ref d.pose, UIWin.Body, UIMove.None);
+            if (UI.Button("X")) 
+            {
+                annots.Remove(d);
+            }
+            
+            UI.Label(d.text);
+            UI.WindowEnd();
+
+        }
+
     }
 }

@@ -66,8 +66,12 @@ namespace SKRecording
             {
                 try
                 {
-                    RecordingData[] frame = coder.Deserialize<DeserializedRecordingArray>(frameJSON).toRecordingDataArray();
-                    displayAll(frame, anchorTRS);
+                    DeserializedRecordingArray deserialized = coder.Deserialize<DeserializedRecordingArray>(frameJSON);
+                    RecordingData[] frame = deserialized.toRecordingDataArray();
+                    int[] paramLengths = deserialized.getParamLengths();
+
+                    displayAll(frame, paramLengths, anchorTRS);
+
                 }
                 catch (Exception e)
                 {

@@ -1,6 +1,6 @@
 using StereoKit;
 using System;
-using Windows.Perception.Spatial;
+using System.Collections.Generic;
 
 namespace SKRecording
 {
@@ -21,21 +21,22 @@ namespace SKRecording
             Material floorMaterial = new Material(Shader.FromFile("floor.hlsl"));
             floorMaterial.Transparency = Transparency.Blend;
 
+            List<RecordingData> annotations = new List<RecordingData>();
             HandRecorder rightRecorder = new HandRecorder(Handed.Right);
-            //HandRecorder leftRecorder = new HandRecorder(Handed.Left);
+            HandRecorder leftRecorder = new HandRecorder(Handed.Left);
             HeadRecorder headRecorder = new HeadRecorder();
+            AnnotationRecorder annotationRecorder = new AnnotationRecorder(annotations);
 
             string IP = "10.0.0.5";
             int port = 12345;
             string myIP = Utils.GetLocalIPAddress();
 
-
-            Recorder[] recorders = new Recorder[] { headRecorder, rightRecorder/*, leftRecorder*/ };
-            RecordingAggregator aggregator = new DynamicRecorderAggregator(recorders);
+            Recorder[] recorders = new Recorder[] { headRecorder, rightRecorder, leftRecorder, annotationRecorder };
+            RecordingAggregator aggregator = new RemoteRecordingAggregator(recorders,IP,port);
             RecordingAggregator streamReceiver = new ReceiveStreamAggregator(recorders, myIP, port, 100);
 
-            Pose windowPoseInput = new Pose(0, 0.1f, -0.2f, Quat.Identity);
-            string inputState = "Enter label text";
+            Pose windowPoseInput = new Pose(0, 0.1f, -0.2f, Quat.LookDir(0, 0, 1));
+            string inputState = "Enter annotation text";
             
             // rotate
             Pose windowPose = new Pose(0, 0.2f, -0.3f, Quat.LookDir(0, 0, 1));
@@ -43,24 +44,37 @@ namespace SKRecording
             bool recording = false;
             bool playing = false;
             bool streaming = false;
-            bool receivingStream = false;
             bool wasRecording = false;
+            bool receivingStream = false;
+            bool addingAnnotation = false;
 
             // Core application loop
             while (SK.Step(() =>
             {
-                UI.WindowBegin("Window Input", ref windowPoseInput);
 
-                // Add a small label in front of it on the same line
-                UI.Label("Text:");
-                UI.SameLine();
-                if (UI.Input("Text", ref inputState))
-                    Log.Info($"Input text just changed");
+                if (addingAnnotation)
+                {
 
-                UI.WindowEnd();
+                    UI.WindowBegin("New annotation", ref windowPoseInput);
+                if (UI.Button("Done"))
+                {
+                    annotations.Add(new RecordingData(windowPoseInput, inputState));
+                    addingAnnotation = false;
+                    inputState = "Enter annotation text";
+                }
+
+                UI.Input("AnnotationText", ref inputState, default, TextContext.Text);
+                    
+
+                    UI.WindowEnd();
+            }
+                else
+                    {
+                        windowPoseInput = Input.Head;
+                    }
 
 
-                UI.WindowBegin("Window", ref windowPose, new Vec2(20, 0) * U.cm);
+            UI.WindowBegin("Window", ref windowPose, new Vec2(20, 0) * U.cm);
                 if (!playing && !receivingStream && !streaming)
                 {
                     UI.Toggle(recording ? "Stop Recording" : "Record", ref recording);
@@ -77,7 +91,21 @@ namespace SKRecording
                 {
                     UI.Toggle(receivingStream ? "Stop Receiving" : "Start Receiving", ref receivingStream);
                 }
+                if (!addingAnnotation)
+                {
+                    addingAnnotation = UI.Button("Add Annotation");
+                }
+
                 UI.WindowEnd();
+
+                if(!playing && !receivingStream)
+                {
+                    for (int i = 0; i < annotations.Count; i++)
+                    {
+                        Utils.showDeletableAnnotation(annotations[i],annotations);
+                    }
+                }
+
 
                 if (recording || streaming)
                 {

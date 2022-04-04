@@ -1,11 +1,10 @@
 ﻿using StereoKit;
-using System;
 
 namespace SKRecording
 {
     public class DeserializedRecordingArray
     {
-        public int count;
+        public int[] paramLenghts;
         public float[][] Quats { get; set; }
         public float[][] Tvecs { get; set; }
         public string[] texts { get; set; }
@@ -14,7 +13,7 @@ namespace SKRecording
         public RecordingData[] toRecordingDataArray()
         {
 
-            RecordingData[] result = new RecordingData[this.count];
+            RecordingData[] result = new RecordingData[Utils.sum(paramLenghts)];
 
             for (int i = 0; i < result.Length; i++)
             {
@@ -28,7 +27,12 @@ namespace SKRecording
 
         }
 
-        public static DeserializedRecordingArray fromRecordingDataArray(RecordingData[] recordingData)
+        public int[] getParamLengths()
+        {
+            return paramLenghts;
+        }
+
+        public static DeserializedRecordingArray fromRecordingDataArray(RecordingData[] recordingData, int[] paramLengths)
         {
             float[][] orientations = new float[recordingData.Length][];
             float[][] positions = new float[recordingData.Length][];
@@ -46,7 +50,7 @@ namespace SKRecording
             }
 
             DeserializedRecordingArray deserializedRecordingArray = new DeserializedRecordingArray();
-            deserializedRecordingArray.count = recordingData.Length;
+            deserializedRecordingArray.paramLenghts = paramLengths;
             deserializedRecordingArray.Quats = orientations;
             deserializedRecordingArray.Tvecs = positions;
             deserializedRecordingArray.texts = texts;

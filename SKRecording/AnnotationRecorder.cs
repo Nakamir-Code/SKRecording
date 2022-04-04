@@ -3,50 +3,31 @@ using System.Collections.Generic;
 
 namespace SKRecording
 {
-    struct Annotation
-    {
-        public Pose pose;
-        public string text;
-
-        public Annotation(Pose pose, string text)
-        {
-            this.pose = pose;
-            this.text = text;
-        }
-    }
-
     class AnnotationRecorder : Recorder
     {
-        List<string> texts;
-        List<Pose> poses;
+        private List<RecordingData> annotations;
 
-        public AnnotationRecorder()
+        public AnnotationRecorder(List<RecordingData> annotations)
         {
-            texts = new List<string>();
-            poses = new List<Pose>();
+            this.annotations = annotations;
         }
 
         public void displayFrame(RecordingData[] data)
         {
-            int i = 0;
-            foreach(string text in texts)
+            for(int i = 0; i<data.Length; i++)
             {
-                UI.WindowBegin("", ref data[i].pose, UIWin.Body);
-                UI.Label(data[i].text);
-                UI.WindowEnd();
-                i++;
+                Utils.showAnnotation(data[i]);
             }
-
         }
 
         public RecordingData[] getCurrentFrame()
         {
-            throw new System.NotImplementedException();
+            return annotations.ToArray();
         }
 
         public int getObjectCount()
         {
-            throw new System.NotImplementedException();
-        }
+            return annotations.Count;
+        }    
     }
 }

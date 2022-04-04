@@ -141,11 +141,6 @@
     <None Include="Assets\head_11k_centered.obj" />
     <None Include="Assets\leftHand.glb" />
     <None Include="Assets\rightHand.glb" />
-    <None Include="HandLeft_v001.blend" />
-    <None Include="HandLeft_v002.blend" />
-    <None Include="HandRight_v001.blend" />
-    <None Include="Hand_v001.blend" />
-    <None Include="Hand_v002.blend" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
