@@ -32,7 +32,7 @@ namespace SKRecording
             string myIP = Utils.GetLocalIPAddress();
 
             Recorder[] recorders = new Recorder[] { headRecorder, rightRecorder, leftRecorder, annotationRecorder };
-            RecordingAggregator aggregator = new RemoteRecordingAggregator(recorders,IP,port);
+            RecordingAggregator aggregator = new DynamicRecorderAggregator(recorders);
             RecordingAggregator streamReceiver = new ReceiveStreamAggregator(recorders, myIP, port, 100);
 
             Pose windowPoseInput = new Pose(0, 0.1f, -0.2f, Quat.LookDir(0, 0, 1));
