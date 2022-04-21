@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using StereoKit;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SKRecording
 {
@@ -63,6 +64,21 @@ namespace SKRecording
             UI.WindowEnd();
 
         }
+
+        public static byte[] concatBytes(byte[][] arrays)
+        {
+            byte[] bytes = new byte[arrays.Sum(a => a.Length)];
+            int offset = 0;
+
+            foreach (byte[] array in arrays)
+            {
+                System.Buffer.BlockCopy(array, 0, bytes, offset, array.Length);
+                offset += array.Length;
+            }
+
+            return bytes;
+        }
+
 
     }
 }

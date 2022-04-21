@@ -79,6 +79,7 @@
     <Compile Include="HeadRecorder.cs" />
     <Compile Include="JSONCoder.cs" />
     <Compile Include="ModelWrapper.cs" />
+    <Compile Include="ImageParser.cs" />
     <Compile Include="Playbacker.cs" />
     <Compile Include="PointCloud.cs" />
     <Compile Include="Program.cs" />

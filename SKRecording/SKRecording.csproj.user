@@ -22,4 +22,8 @@
     <RemoteDebugEnabled>true</RemoteDebugEnabled>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
+<ItemGroup>
+   <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+</ItemGroup>
 </Project>
+
