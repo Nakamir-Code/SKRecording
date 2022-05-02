@@ -15,7 +15,7 @@ namespace SKRecording
 
         public RecordingData[] getCurrentFrame()
         {
-            return handJointsToRecordingDataArray(Input.Hand(whichHand).fingers);
+            return handJointsToRecordingDataArray(Input.Hand(whichHand).fingers, whichHand);
         }
 
         public void displayFrame(RecordingData[] data)
@@ -25,17 +25,18 @@ namespace SKRecording
 
         public int getObjectCount()
         {
-            return 25;
+            return 26;
         }
 
-        private static RecordingData[] handJointsToRecordingDataArray(HandJoint[] joints)
+        private static RecordingData[] handJointsToRecordingDataArray(HandJoint[] joints, Handed whichHand)
         {
-            RecordingData[] recordingData = new RecordingData[joints.Length];
-
+            RecordingData[] recordingData = new RecordingData[joints.Length+1];
+            
             for (int i = 0; i < joints.Length; i++)
             {
                 recordingData[i] = new RecordingData(new Pose(joints[i].position, joints[i].orientation));
             }
+            recordingData[joints.Length] = new RecordingData(Input.Hand(whichHand).wrist);
             return recordingData;
         }
     }
