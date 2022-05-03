@@ -25,7 +25,6 @@ namespace SKRecording
 
         private JointInfo[] jointInfo;
         private float nodeScale;
-        private float rootScale;
         private Quat defaultBoneRot;
 
         public VRHand(Handed whichHand)
@@ -42,7 +41,7 @@ namespace SKRecording
                 //making sure the high performaance mat is applied
                 node.Material = Material.Default;
             }
-
+            //instantiating the jointinfo class with all the relevant fields set  
             jointInfo = new JointInfo[] {
                 // currently SK doesn't have an enum for wrist but populates the thumb root and knucklemajor with the same value,
                 // I'm borrowing it here to store the wrist
@@ -71,7 +70,7 @@ namespace SKRecording
                 new JointInfo(FingerId.Little, JointId.KnuckleMid,  null, false),
                 new JointInfo(FingerId.Little, JointId.KnuckleMinor,null, false) };
 
-
+            //adding the rig bones to the ointinfo class
             foreach (JointInfo j in jointInfo)
             {
                 if (j.rootBone)
@@ -98,6 +97,7 @@ namespace SKRecording
             }
             foreach (var j in jointInfo)
             {
+                //rootbone is the wrist
                 if (j.rootBone)
                 {
 
@@ -105,6 +105,7 @@ namespace SKRecording
                     j.node.ModelTransform = Matrix.TRS(joint.position, joint.orientation * defaultBoneRot, nodeScale);
 
                 }
+                // all other fingers and joints
                 else 
                 {
                     Pose joint = GetJoint(data, j.finger, j.joint).pose;
