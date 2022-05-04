@@ -4,9 +4,17 @@ using System.Collections.Generic;
 
 namespace SKRecording
 {
+    static class Constants
+    {
+        // Server we connect to 
+        public const string IP = "192.168.1.159";
+        public const int port = 12345;
+        public const int Count = 26; // how many joints per hand
+    }
     // Main program class
     class Program
     {
+        
         static void Main(string[] args)
         {
             /* 
@@ -41,8 +49,8 @@ namespace SKRecording
 
 
             // Server we connect to 
-            string IP = "10.0.0.15";
-            int port = 12345;
+            string IP = Constants.IP;
+            int port = Constants.port;
             // Our IP
             string myIP = Utils.GetLocalIPAddress();
 

@@ -10,7 +10,7 @@ namespace SKRecording
         // The actual model
         private Model handModel;
         // Helper struct for managing handjoints
-        class JointInfo
+        struct JointInfo
         {
             public ModelNode node;
             public FingerId finger;
@@ -76,20 +76,20 @@ namespace SKRecording
                 new JointInfo(FingerId.Little, JointId.KnuckleMinor,null, false) };
 
             //adding the rig bones to the ointinfo class
-            foreach (JointInfo j in jointInfo)
+            for (int i = 0; i < jointInfo.Length; i++)
             {
-                if (j.rootBone)
+                
+                if (jointInfo[i].rootBone)
                 {
                     string jointName = "Hand.Wrist." + whichHand.ToString();
-                    j.node = handModel.FindNode(jointName);
+                    jointInfo[i].node = handModel.FindNode(jointName);
 
                 }
                 else
                 {
-                    string jointName = j.finger.ToString() + "." + j.joint.ToString() + "." + whichHand.ToString();
-                    j.node = handModel.FindNode(jointName);
+                    string jointName = jointInfo[i].finger.ToString() + "." + jointInfo[i].joint.ToString() + "." + whichHand.ToString();
+                    jointInfo[i].node = handModel.FindNode(jointName);
                 }
-
             }
 
         }
@@ -97,7 +97,7 @@ namespace SKRecording
         // Display a hand with the provided joint information
         public void show(RecordingData[] data)
         {
-            if (data.Length != 26)
+            if (data.Length != Constants.Count)
             {
                 throw new Exception("Expected exactly 26 joints");
             }
@@ -107,18 +107,18 @@ namespace SKRecording
                 if (j.rootBone)
                 {
 
-                    Pose joint = data[data.Length-1].pose;
+                    Pose joint = data[data.Length - 1].pose;
                     j.node.ModelTransform = Matrix.TRS(joint.position, joint.orientation * defaultBoneRot, nodeScale);
 
                 }
                 // all other fingers and joints
-                else 
+                else
                 {
                     Pose joint = GetJoint(data, j.finger, j.joint).pose;
                     j.node.ModelTransform = Matrix.TRS(joint.position, joint.orientation * defaultBoneRot, nodeScale);
                 }
             }
-            
+
 
             handModel.Draw(Matrix.Identity);
         }

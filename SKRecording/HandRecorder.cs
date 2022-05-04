@@ -16,22 +16,22 @@ namespace SKRecording
             this.whichHand = whichHand;
         }
 
-        // Recording data is returned for every joint (25 joints) in the hand
+        // Recording data is returned for every joint (26 joints) in the hand
         public RecordingData[] getCurrentFrame()
         {
             return handJointsToRecordingDataArray(Input.Hand(whichHand).fingers, whichHand);
         }
 
-        // Expects a RecordingData array of 25 handjoint poses and displays it in the form of the tracked Handmodel 
+        // Expects a RecordingData array of 26 handjoint poses and displays it in the form of the tracked Handmodel 
         public void displayFrame(RecordingData[] data)
         {
             handModel.show(data);
         }
 
-        // Each hand tracks 25 joints
+        // Each hand tracks 26 joints
         public int getObjectCount()
         {
-            return 26;
+            return Constants.Count;
         }
 
 
