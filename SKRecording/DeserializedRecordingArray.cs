@@ -2,17 +2,25 @@
 
 namespace SKRecording
 {
+    // Intermediate class for converting between RecordingData arrays and JSON strings
     public class DeserializedRecordingArray
     {
+        // Tracks the length of each Recorder we're tracking.
+        // E.g. We have a HeadRecorder and an AnnotationRecorder with 4 annotations. 
+        // Then, this value would be [1,4], as we are tracking 1 head and 4 annotations.
         public int[] paramLenghts;
+        // Orientation of each object we're tracking
         public float[][] Quats { get; set; }
+        // Position of each object we're tracking
         public float[][] Tvecs { get; set; }
+        // Text associated with each object we're tracking (currently only used by AnnotationRecorder)
         public string[] texts { get; set; }
 
-
+        // Converts from this DeserializedRecordingArray to an array of RecordingData
         public RecordingData[] toRecordingDataArray()
         {
 
+            // RecordingData arrays simply concatenate the RecordingData for the seperate objects behind each other
             RecordingData[] result = new RecordingData[Utils.sum(paramLenghts)];
 
             for (int i = 0; i < result.Length; i++)
@@ -32,6 +40,7 @@ namespace SKRecording
             return paramLenghts;
         }
 
+        // Converts an array of RecordingData to a DeserializedRecordingArray
         public static DeserializedRecordingArray fromRecordingDataArray(RecordingData[] recordingData, int[] paramLengths)
         {
             float[][] orientations = new float[recordingData.Length][];

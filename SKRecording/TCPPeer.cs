@@ -3,9 +3,11 @@ using System;
 
 namespace SKRecording
 {
+    // Super class that contains functionality shared by TCPClient and TCPServer
     abstract class TCPPeer
     {
 
+        // Counts how many frames were received
         protected int receivedCount;
         // Intermediate buffer for saving cut-off frame
         private string incompleteFrame = null;
@@ -24,27 +26,33 @@ namespace SKRecording
             receivedCount = 0;
         }
 
+        // Let children handle if they want
         protected virtual void OnConnected(object sender, ConnectionEventArgs e)
         {
-            // Let children handle if they want
             return;
         }
 
+        // Let children handle if they want
         protected virtual void OnDisconnected(object sender, ConnectionEventArgs e)
         {
-            // Let children handle if they want
             return;
         }
 
+        // Called when data is received by this peer
         protected void OnDataReceived(object sender, DataReceivedEventArgs e)
         {
+            // Prepare e into a sequence of packet strings to be parsed
             string data = preParseData(e);
+            // Split the sequence into individual frames
             string[] frames = data.Split(seperatorSymbol);
+            // Parse the individual frames into the format expected to continue working with them
             string[] result = parseFrames(frames);
             receivedCount += frames.Length;
+            // Pass the now parsed data forward
             OnPacketDecoded(result);
         }
 
+        // Frame parsing logic that handles such things as e.g. incomplete frames
         private string[] parseFrames(string[] frames)
         {
             // First and last frames might be cutoff, check
@@ -82,11 +90,14 @@ namespace SKRecording
                 end = frames.Length - 1;
             }
 
+            // Check if we perfectly parsed all frames or if we have some cutoff
             if (end == frames.Length && start == 0)
             {
+                // Perfectly parsed
                 return frames;
             }
-
+            
+            // Handle cutoff case and only forward the complete frames
             string[] result = new string[end - start];
             Array.Copy(frames, start, result, 0, result.Length);
             return result;
@@ -97,6 +108,7 @@ namespace SKRecording
             receivedCount = 0;
         }
 
+        // To be implemented by children
         public abstract void send(string toSend, bool raw = false);
         public abstract void connect();
         public abstract void disconnect();
@@ -107,6 +119,7 @@ namespace SKRecording
             return System.Text.Encoding.UTF8.GetString(e.Data);
         }
 
+        // Logic to implement the event for a decoded frame
         protected virtual void OnPacketDecoded(string[] e)
         {
             EventHandler<string[]> handler = decodedFrame;

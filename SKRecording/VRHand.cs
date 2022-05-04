@@ -4,10 +4,13 @@ using System;
 // Adapted from https://github.com/ClonedPuppy/SKHands/blob/master/Platforms/SKHands_DotNet/Program.cs
 namespace SKRecording
 {
+    // Wrapper class for a hand 3d model
     public class VRHand : ModelWrapper
     {
+        // The actual model
         private Model handModel;
 
+        // Helper struct for managing handjoints
         struct JointInfo
         {
             public ModelNode node;
@@ -21,13 +24,17 @@ namespace SKRecording
             }
         }
 
+        // Joint info of the hand we're managing
         private JointInfo[] jointInfo;
+        // Scale with which to display the model
         private float nodeScale;
+        // Default rotation of the model's bones
         private Quat defaultBoneRot;
 
         public VRHand(Handed whichHand)
         {
 
+            // Specify which hand this is and load the model accordingly
             if(whichHand == Handed.Left)
             {
                 handModel = Model.FromFile("leftHand.glb");
@@ -36,6 +43,7 @@ namespace SKRecording
             {
                 handModel = Model.FromFile("rightHand.glb");
             }
+            // Load all joints from the model
             jointInfo = new JointInfo[] {
                 new JointInfo(FingerId.Thumb, JointId.KnuckleMajor, handModel.FindNode("ThumbMeta")),
                 new JointInfo(FingerId.Thumb, JointId.KnuckleMid,   handModel.FindNode("ThumbProxi")),
@@ -61,6 +69,7 @@ namespace SKRecording
                 new JointInfo(FingerId.Little, JointId.KnuckleMid,   handModel.FindNode("PinkyInter")),
                 new JointInfo(FingerId.Little, JointId.KnuckleMinor, handModel.FindNode("PinkyDist"))};
 
+            // Standard values
             defaultBoneRot = Quat.FromAngles(-90f, 0, 0);
             nodeScale = 1;
         }
@@ -82,8 +91,10 @@ namespace SKRecording
             handModel.Draw(Matrix.Identity);
         }
 
+        // Helper function for identifying index of specific joint inside of an array
         private RecordingData GetJoint(RecordingData[] poses, FingerId finger, JointId joint)
         {
+            // As documented on stereokit
             return poses[5 * (int)finger + (int)joint];
         }
 
