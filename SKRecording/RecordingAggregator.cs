@@ -3,10 +3,14 @@ using System;
 
 namespace SKRecording
 {
+    // Abstract class for managing multiple recorders at once. The main detail that is up to
+    // child classes to inherit is how they store and fetch the recorded data.
     abstract class RecordingAggregator
     {
 
+        // Recorders this instance keeps track off
         private Recorder[] recorders;
+        // Buffer for temporarily storing one frame of data before the child class decides how to permanently store it
         private RecordingData[] recordingDataAggregator;
         
 
@@ -14,18 +18,19 @@ namespace SKRecording
         {
             this.recorders = recorders;
             recordingDataAggregator = new RecordingData[getObjectCount()];
-
         }
 
-        // This is used on the sending side, meanong we get the poses relative to worldspace and need to convert them to our anchor
+        // Returns an array representing the data captured in the current frame relative to the provided anchor.
         protected RecordingData[] getCurrentRecordingData(Matrix worldAnchorTRS)
         {
+            // Check if some objects were deleted/added and adjust buffer size accordingly
             if(recordingDataAggregator.Length != getObjectCount())
             {
                 Array.Resize(ref recordingDataAggregator, getObjectCount());
             }
             int recAggIndex = 0;
 
+            // We get the poses relative to worldspace and need to convert them to being relative to our anchor
             Matrix inversedWorldAnchor = worldAnchorTRS.Inverse;
             for( int i = 0; i<recorders.Length; i++)
             {
@@ -43,6 +48,7 @@ namespace SKRecording
             return recordingDataAggregator;
         }
 
+        // Returns an array where each index is the amount of objects each recorder at that index is tracking 
         protected int[] getCurrentParamLengths()
         {
             int[] pLengths = new int[recorders.Length];
@@ -54,11 +60,12 @@ namespace SKRecording
             return pLengths;
 
         }
-        // This is used on the receiving side, meaning we get the poses relative to the anchor and need to convert them to worldspace
+        // Displays the objects its recorders are tracking using the provided RecordingData which expected to be relative to the provided anchor.
         protected void displayAll(RecordingData[] recorderDatas, int[] paramLengths, Matrix worldAnchorTRS)
         {
             int recAggIndex = 0;
 
+            // We get the poses relative to the anchor and need to convert them to worldspace.
             for (int i = 0; i<recorders.Length; i++)
             {
                 RecordingData[] toDisplay = new RecordingData[paramLengths[i]];
@@ -74,6 +81,7 @@ namespace SKRecording
             }
         }
 
+        // Returns how many total objects this aggregator's recorders track
         protected int getObjectCount()
         {
             int objectCount = 0;
@@ -84,13 +92,13 @@ namespace SKRecording
             return objectCount;
         }
 
-        // To be called after recording is finished
+        // To be called after recording is finished in case the child needs any extra cleanup
         public virtual void finishRecording()
         { 
             return;
         }
 
-        // To be called after playback is finished
+        // To be called after playback is finished in case the child needs any extra cleanup
         public virtual void finishPlayback()
         {
             return;
