@@ -48,7 +48,7 @@ class SimpleTCPServer():
 
                         for frame in self.recording:
                             semicolonByte = bytes(";", 'utf-8')
-                            connection.sendall(frame + semicolonByte)
+                            connection.sendall(framwife + semicolonByte)
                     else:
                         frames = self.parseJSON(data)
                         for frame in frames:
@@ -59,7 +59,7 @@ class SimpleTCPServer():
                 connection.close()
 
 def main():
-    server = SimpleTCPServer("10.0.0.5",12345)
+    server = SimpleTCPServer("192.168.1.159",12345)
     server.start()
 
 if __name__ == "__main__":

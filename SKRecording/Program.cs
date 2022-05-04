@@ -39,8 +39,9 @@ namespace SKRecording
             HeadRecorder headRecorder = new HeadRecorder();
             AnnotationRecorder annotationRecorder = new AnnotationRecorder(annotations);
 
+
             // Server we connect to 
-            string IP = "10.0.0.5";
+            string IP = "10.0.0.15";
             int port = 12345;
             // Our IP
             string myIP = Utils.GetLocalIPAddress();

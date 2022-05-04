@@ -135,22 +135,14 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\hand.glb" />
-    <None Include="Assets\hand2.glb" />
+    <None Include="Assets\Hand_Left.glb" />
+    <None Include="Assets\Hand_Right.glb" />
     <None Include="Assets\head_11k_centered.obj" />
-    <None Include="Assets\leftHand.glb" />
-    <None Include="Assets\rightHand.glb" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs, Version=14.0">
       <Name>Visual C++ 2015-2019 Runtime for Universal Windows Platform Apps</Name>
     </SDKReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\HL2-Research-Mode-Streamer-Unity-Plugin\SimpleStreamer\WinRTComponent\WinRTComponent.vcxproj">
-      <Project>{6b047504-bb89-4432-bbf1-1d67bd44fcc1}</Project>
-      <Name>WinRTComponent</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '16.0' ">
     <VisualStudioVersion>16.0</VisualStudioVersion>

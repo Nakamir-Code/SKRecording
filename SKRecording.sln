@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.32126.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SKRecording", "SKRecording\SKRecording.csproj", "{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinRTComponent", "..\..\HL2-Research-Mode-Streamer-Unity-Plugin\SimpleStreamer\WinRTComponent\WinRTComponent.vcxproj", "{6B047504-BB89-4432-BBF1-1D67BD44FCC1}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -31,18 +29,6 @@ Global
 		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Release|x64.Build.0 = Release|x64
 		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Release|x64.Deploy.0 = Release|x64
 		{8523F6BD-E8A3-4056-9CEF-E4AD738A6159}.Release|x86.ActiveCfg = Release|x64
-		{6B047504-BB89-4432-BBF1-1D67BD44FCC1}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{6B047504-BB89-4432-BBF1-1D67BD44FCC1}.Debug|ARM64.Build.0 = Debug|ARM64
-		{6B047504-BB89-4432-BBF1-1D67BD44FCC1}.Debug|x64.ActiveCfg = Debug|x64
-		{6B047504-BB89-4432-BBF1-1D67BD44FCC1}.Debug|x64.Build.0 = Debug|x64
-		{6B047504-BB89-4432-BBF1-1D67BD44FCC1}.Debug|x86.ActiveCfg = Debug|Win32
-		{6B047504-BB89-4432-BBF1-1D67BD44FCC1}.Debug|x86.Build.0 = Debug|Win32
-		{6B047504-BB89-4432-BBF1-1D67BD44FCC1}.Release|ARM64.ActiveCfg = Release|ARM64
-		{6B047504-BB89-4432-BBF1-1D67BD44FCC1}.Release|ARM64.Build.0 = Release|ARM64
-		{6B047504-BB89-4432-BBF1-1D67BD44FCC1}.Release|x64.ActiveCfg = Release|x64
-		{6B047504-BB89-4432-BBF1-1D67BD44FCC1}.Release|x64.Build.0 = Release|x64
-		{6B047504-BB89-4432-BBF1-1D67BD44FCC1}.Release|x86.ActiveCfg = Release|Win32
-		{6B047504-BB89-4432-BBF1-1D67BD44FCC1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
