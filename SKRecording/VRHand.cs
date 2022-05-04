@@ -4,10 +4,12 @@ using System;
 // Adapted from https://github.com/ClonedPuppy/SKHands/blob/master/Platforms/SKHands_DotNet/Program.cs
 namespace SKRecording
 {
+    // Wrapper class for a hand 3d model
     public class VRHand : ModelWrapper
     {
+        // The actual model
         private Model handModel;
-
+        // Helper struct for managing handjoints
         class JointInfo
         {
             public ModelNode node;
@@ -23,8 +25,11 @@ namespace SKRecording
             }
         }
 
+        // Joint info of the hand we're managing
         private JointInfo[] jointInfo;
+        // Scale with which to display the model
         private float nodeScale;
+        // Default rotation of the model's bones
         private Quat defaultBoneRot;
 
         public VRHand(Handed whichHand)
@@ -86,6 +91,7 @@ namespace SKRecording
                 }
 
             }
+
         }
 
         // Display a hand with the provided joint information
@@ -117,8 +123,10 @@ namespace SKRecording
             handModel.Draw(Matrix.Identity);
         }
 
+        // Helper function for identifying index of specific joint inside of an array
         private RecordingData GetJoint(RecordingData[] poses, FingerId finger, JointId joint)
         {
+            // As documented on stereokit
             return poses[5 * (int)finger + (int)joint];
         }
 

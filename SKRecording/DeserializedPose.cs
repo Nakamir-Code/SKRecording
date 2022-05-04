@@ -1,12 +1,15 @@
 ﻿using StereoKit;
 namespace SKRecording
 {
+    // Intermediate class for converting between Poses and JSON strings
     public class DeserializedPose
     {
+        // Orientation
         public float[] Quats { get; set; }
+        // Position
         public float[] Tvecs { get; set; }
 
-
+        // Converts a Pose to a DeserializedPose
         public static DeserializedPose fromPose(Pose pose)
         {
             DeserializedPose deserializedPose = new DeserializedPose();
@@ -16,6 +19,8 @@ namespace SKRecording
             deserializedPose.Tvecs = positionArray;
             return deserializedPose;
         }
+
+        // Converts this instance of a DeserializedPose to a Pose
         public Pose toPose()
         {
             return new Pose(

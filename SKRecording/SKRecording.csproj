@@ -79,7 +79,6 @@
     <Compile Include="HeadRecorder.cs" />
     <Compile Include="JSONCoder.cs" />
     <Compile Include="ModelWrapper.cs" />
-    <Compile Include="Playbacker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReceiveStreamAggregator.cs" />

@@ -2,7 +2,7 @@
 
 namespace SKRecording
 {
-    // Global class that is passed around containing data for one object in one frame
+    // Global class that is passed around containing data for one object in one frame 
     public class RecordingData
     {
         public Pose pose;
