@@ -1,5 +1,6 @@
 import socket
 
+
 class SimpleTCPServer():
     def __init__(self, IP, PORT) -> None:
         self.incomplete_JSON = None
@@ -9,23 +10,34 @@ class SimpleTCPServer():
         self.serverInfo = (IP, PORT)
 
     def parseJSON(self, packet):
+        # print("....................................................................................................")
+        # print("Packet: ")
+        # print(packet)
+
         frames = packet.split(b';')
+        # print("Frame: ")
+        # print(frames)
+
         start = 0
         end = len(frames)
-        if len(frames[0]) == 0:
+
+        # Frame 0's, rare situation handling.
+        if len(frames[0]) == 0:  # we got a packet starting with ;
             start = 1
-        elif frames[0][0] != ord('{'):
+        elif frames[0][0] != ord('{'):  # the first frame is the missing part of last packet's last frame.
             frames[0] = self.incomplete_JSON + frames[0]
             self.incomplete_JSON = None
         
         last_frame = frames[len(frames)-1]
-        if len(last_frame) == 0:
+
+        # Last frame's rare situation handling.
+        if len(last_frame) == 0:  # The packet ended with ;
             end = len(frames) - 1
-        elif last_frame[len(last_frame)-1] != ord('}'):
+        elif last_frame[len(last_frame)-1] != ord('}'):  # the last frame contained first half of a frame (json string)
             self.incomplete_JSON = last_frame
             end = len(frames) - 1
-        return frames[start:end]
 
+        return frames[start:end]  # return list of full json strings
 
     def start(self):
         print("Starting to listen")
@@ -38,6 +50,7 @@ class SimpleTCPServer():
                 print('client connected:', client_address)
                 while True:
                     data = connection.recv(10000)
+
                     # P for playback
                     if data[0] == ord('P'):
                         # Send the total length first
@@ -59,7 +72,7 @@ class SimpleTCPServer():
                 connection.close()
 
 def main():
-    server = SimpleTCPServer("192.168.1.159",12345)
+    server = SimpleTCPServer("10.0.0.4", 12345)
     server.start()
 
 if __name__ == "__main__":
