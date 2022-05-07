@@ -9,19 +9,19 @@ namespace SKRecording
     {
 
         // Recorders this instance keeps track off
-        private Recorder[] recorders;
+        private IRecorder[] recorders;
         // Buffer for temporarily storing one frame of data before the child class decides how to permanently store it
-        private RecordingData[] recordingDataAggregator;
+        private Label3D[] recordingDataAggregator;
         
 
-        protected RecordingAggregator(Recorder[] recorders)
+        protected RecordingAggregator(IRecorder[] recorders)
         {
             this.recorders = recorders;
-            recordingDataAggregator = new RecordingData[getObjectCount()];
+            recordingDataAggregator = new Label3D[getObjectCount()];
         }
 
         // Returns an array representing the data captured in the current frame relative to the provided anchor.
-        protected RecordingData[] getCurrentRecordingData(Matrix worldAnchorTRS)
+        protected Label3D[] getCurrentRecordingData(Matrix worldAnchorTRS)
         {
             // Check if some objects were deleted/added and adjust buffer size accordingly
             if(recordingDataAggregator.Length != getObjectCount())
@@ -34,7 +34,7 @@ namespace SKRecording
             Matrix inversedWorldAnchor = worldAnchorTRS.Inverse;
             for( int i = 0; i<recorders.Length; i++)
             {
-                RecordingData[] recordingData = recorders[i].getCurrentFrame();
+                Label3D[] recordingData = recorders[i].getCurrentFrame();
                 for(int j =0; j<recordingData.Length; j++)
                 {
                     // The correct multiplication is inversedWorldAnchor * pose. However, matrix multiplication in C# is inverted, meaning if we want to 
@@ -61,14 +61,14 @@ namespace SKRecording
 
         }
         // Displays the objects its recorders are tracking using the provided RecordingData which expected to be relative to the provided anchor.
-        protected void displayAll(RecordingData[] recorderDatas, int[] paramLengths, Matrix worldAnchorTRS)
+        protected void displayAll(Label3D[] recorderDatas, int[] paramLengths, Matrix worldAnchorTRS)
         {
             int recAggIndex = 0;
 
             // We get the poses relative to the anchor and need to convert them to worldspace.
             for (int i = 0; i<recorders.Length; i++)
             {
-                RecordingData[] toDisplay = new RecordingData[paramLengths[i]];
+                Label3D[] toDisplay = new Label3D[paramLengths[i]];
                 for (int j = 0; j < toDisplay.Length; j++)
                 {
                     // The correct multiplication is worldAnchorTRS * pose. However, matrix multiplication in C# is inverted, meaning if we want to 
@@ -85,7 +85,7 @@ namespace SKRecording
         protected int getObjectCount()
         {
             int objectCount = 0;
-            foreach (Recorder r in recorders)
+            foreach (IRecorder r in recorders)
             {
                 objectCount += r.getObjectCount();
             }

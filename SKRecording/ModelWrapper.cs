@@ -6,6 +6,6 @@ namespace SKRecording
     interface ModelWrapper
     {
         // Implements the logic to display this instance's model based on the provided RecordingData
-        void show(RecordingData[] data);
+        void show(Label3D[] data);
     }
 }

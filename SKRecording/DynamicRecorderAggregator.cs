@@ -11,7 +11,7 @@ namespace SKRecording
         // JSON en- and decoder
         JsonCoder coder;
 
-        public DynamicRecorderAggregator(Recorder[] recorders): base(recorders)
+        public DynamicRecorderAggregator(IRecorder[] recorders): base(recorders)
         {
             this.recording = new Queue<string>();
             this.coder = new JsonCoder();
@@ -21,7 +21,7 @@ namespace SKRecording
         public override void RecordOneFrame(Matrix anchorTRS)
         {
             // Fetch the current frame data relative to the provided anchor
-            RecordingData[] poses = getCurrentRecordingData(anchorTRS);
+            Label3D[] poses = getCurrentRecordingData(anchorTRS);
             int[] paramLengths = getCurrentParamLengths();
             
             // Convert the RecordingData[] to a JSON string and save it to the queue
@@ -35,7 +35,7 @@ namespace SKRecording
             if (recording.Count == 0) return false;
             // Fetch the JSON string and convert it back to RecordingData[]
             DeserializedRecordingArray deserialized = coder.Deserialize<DeserializedRecordingArray>(recording.Dequeue());
-            RecordingData[] frame = deserialized.toRecordingDataArray();
+            Label3D[] frame = deserialized.toRecordingDataArray();
             int[] paramLengths = deserialized.getParamLengths();
 
             // Display the RecordingData relative to the provided anchor

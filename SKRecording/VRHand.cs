@@ -95,7 +95,7 @@ namespace SKRecording
         }
 
         // Display a hand with the provided joint information
-        public void show(RecordingData[] data)
+        public void show(Label3D[] data)
         {
             if (data.Length != Constants.Count)
             {
@@ -124,7 +124,7 @@ namespace SKRecording
         }
 
         // Helper function for identifying index of specific joint inside of an array
-        private RecordingData GetJoint(RecordingData[] poses, FingerId finger, JointId joint)
+        private Label3D GetJoint(Label3D[] poses, FingerId finger, JointId joint)
         {
             // As documented on stereokit
             return poses[5 * (int)finger + (int)joint];

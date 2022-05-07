@@ -7,10 +7,11 @@ namespace SKRecording
     static class Constants
     {
         // Server we connect to 
-        public const string IP = "192.168.1.159";
+        public const string IP = "10.0.0.4";
         public const int port = 12345;
         public const int Count = 26; // how many joints per hand
     }
+    
     // Main program class
     class Program
     {
@@ -40,33 +41,35 @@ namespace SKRecording
 
 
             // List to track annotations in
-            List<RecordingData> annotations = new List<RecordingData>();
+            List<Label3D> labels = new List<Label3D>();
+
             // Create Recorders for all objects we want to track
             HandRecorder rightRecorder = new HandRecorder(Handed.Right);
             HandRecorder leftRecorder = new HandRecorder(Handed.Left);
             HeadRecorder headRecorder = new HeadRecorder();
-            AnnotationRecorder annotationRecorder = new AnnotationRecorder(annotations);
+            AnnotationRecorder annotationRecorder = new AnnotationRecorder(labels);
+            IRecorder[] recorders = new IRecorder[] { headRecorder, rightRecorder, leftRecorder, annotationRecorder };
 
 
             // Server we connect to 
             string IP = Constants.IP;
             int port = Constants.port;
-            // Our IP
+
+            // Local IP
             string myIP = Utils.GetLocalIPAddress();
 
-            Recorder[] recorders = new Recorder[] { headRecorder, rightRecorder, leftRecorder, annotationRecorder };
             // Recordingaggregators (Here for streaming & server-side recording)
             RecordingAggregator aggregator = new RemoteRecordingAggregator(recorders,IP,port);
             RecordingAggregator streamReceiver = new ReceiveStreamAggregator(recorders, myIP, port, 100);
 
-            // Information for window to add annotation
-            Pose windowPoseInput = new Pose(0, 0.1f, -0.2f, Quat.LookDir(0, 0, 1));
-            string inputState = "Enter annotation text";
+            // Annotation UI Setup
+            Pose annotationMenuPose = new Pose(0, 0.1f, -0.2f, Quat.LookDir(0, 0, 1));
+            string annotationMenuPrompt = "Enter annotation text";
             
             // Information for main control window
-            Pose windowPose = new Pose(0, 0.2f, -0.3f, Quat.LookDir(0, 0, 1));
+            Pose mainMenuPose = new Pose(0, 0.2f, -0.3f, Quat.LookDir(0, 0, 1));
             
-            // Control variables
+            // Control variables  // TODO: follow boolean naming conventions
             bool recording = false;
             bool playing = false;
             bool streaming = false;
@@ -76,57 +79,57 @@ namespace SKRecording
 
             // Core application loop
             while (SK.Step(() =>
-            {
-
-                
+            {    
                 if (addingAnnotation)
                 {
                     // If we are adding an annotation, display the annotation window
-                    UI.WindowBegin("New annotation", ref windowPoseInput);
+                    UI.WindowBegin("New annotation", ref annotationMenuPose);
+
                     if (UI.Button("Done"))
                     {
                         // Add the inputted annotation to the list of annotations
-                        annotations.Add(new RecordingData(windowPoseInput, inputState));
+                        labels.Add(new Label3D(annotationMenuPose, annotationMenuPrompt));
                         addingAnnotation = false;
-                        inputState = "Enter annotation text";
+                        annotationMenuPrompt = "Enter annotation text";
                     }
 
-                    UI.Input("AnnotationText", ref inputState, default, TextContext.Text);
-                        
-
+                    UI.Input("AnnotationText", ref annotationMenuPrompt, default, TextContext.Text);
                     UI.WindowEnd();
                 }
-                // If we don't have to display the annotation window, just have it invisible in the user's head
-                else
+                else // If we don't have to display the annotation window, just have it invisible in the user's head
                 {
-                    windowPoseInput = Input.Head;
+                    annotationMenuPose = Input.Head;  // TODO: just don't call in step function instead.
                 }
 
-
-            // Logic for main control window
-            UI.WindowBegin("Window", ref windowPose, new Vec2(20, 0) * U.cm);
+            
+            // Logic for main menu
+            UI.WindowBegin("Main Menu", ref mainMenuPose, new Vec2(20, 0) * U.cm);
                 // If we are not doing anything, allow the user to start a recording
-                if (!playing && !receivingStream && !streaming)
+                if (!playing && !receivingStream && !streaming) // TODO: create a single state to use
                 {
                     UI.Toggle(recording ? "Stop Recording" : "Record", ref recording);
                 }
+
                 // If we are not doing anything and have a recording, allow the user to start playing a recording
-                if (aggregator.hasRecording() && !recording && !receivingStream && !streaming)
+                if (aggregator.hasRecording() && !recording && !receivingStream && !streaming)  // TODO: find a single state to use
                 {
                     UI.Toggle(playing ? "Stop Playing" : "Play", ref playing);
                 }
+
                 // If we are not doing anything, allow the user to stream (seperate if 
                 // statement because we want the order of the buttons to be record - play - stream - receive)
                 if (!playing && !receivingStream && !recording)
                 {
                     UI.Toggle(playing ? "Stop Streaming" : "Stream", ref streaming);
                 }
+
                 // If we are not doing anything, allow the user to receive (seperate if 
                 // statement because we want the order of the buttons to be record - play - stream - receive)                
                 if (!recording && !playing && !streaming)
                 {
                     UI.Toggle(receivingStream ? "Stop Receiving" : "Start Receiving", ref receivingStream);
                 }
+
                 // If we are not already adding an annotation, allow the user to add an annotation
                 if (!addingAnnotation)
                 {
@@ -138,9 +141,9 @@ namespace SKRecording
                 // If we are not currently playbacking/receiving a different stream, display the locally created annotations
                 if(!playing && !receivingStream)
                 {
-                    for (int i = 0; i < annotations.Count; i++)
+                    for (int i = 0; i < labels.Count; i++)
                     {
-                        Utils.showDeletableAnnotation(annotations[i],annotations);
+                        Utils.showDeletableAnnotation(labels[i],labels);
                     }
                 }
 
@@ -148,12 +151,13 @@ namespace SKRecording
                 // If we are recording or streaming (equivalent in this case), call record on the recordingaggregator
                 if (recording || streaming)
                 {
-                    aggregator.RecordOneFrame(windowPose.ToMatrix());
+                    aggregator.RecordOneFrame(mainMenuPose.ToMatrix());
                 }
+
                 // If we are instead playbacking, try playbacking from the aggregator and end the playback if this call fails
                 else if (playing)
                 {
-                    playing = aggregator.PlaybackOneFrame(windowPose.ToMatrix());
+                    playing = aggregator.PlaybackOneFrame(mainMenuPose.ToMatrix());
                     if (!playing)
                     {
                         aggregator.finishPlayback();
@@ -163,7 +167,7 @@ namespace SKRecording
                 // end the stream receiving if this call fails
                 else if (receivingStream)
                 {
-                    receivingStream = streamReceiver.PlaybackOneFrame(windowPose.ToMatrix());
+                    receivingStream = streamReceiver.PlaybackOneFrame(mainMenuPose.ToMatrix());
                     if (!receivingStream)
                     {
                         streamReceiver.finishPlayback();

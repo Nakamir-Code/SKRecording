@@ -3,23 +3,23 @@
 namespace SKRecording
 {
     // Global class that is passed around containing data for one object in one frame 
-    public class RecordingData
+    public class Label3D
     {
         public Pose pose;
         public string text;
-        public RecordingData(Pose pose, string text)
+        public Label3D(Pose pose, string text)
         {
             this.pose = pose;
             this.text = text;
         }
-        public RecordingData(Pose pose)
+        public Label3D(Pose pose)
         {
             this.pose = pose;
             this.text = "";
         }
-        public RecordingData clone()
+        public Label3D clone()
         {
-            return new RecordingData(this.pose, this.text);
+            return new Label3D(this.pose, this.text);
         }
     }
 }

@@ -40,7 +40,7 @@ namespace SKRecording
         // Note: These are purely the annotation wihtout the option to delete them. This is usually used
         // when doing playback, as we don't want the viewer deleting annotations
         // TODO: Maybe move into its own VRAnnotation class for standardization
-        public static void showAnnotation(RecordingData d)
+        public static void showAnnotation(Label3D d)
         {
             UI.WindowBegin("", ref d.pose, UIWin.Body, UIMove.None);
             UI.Label(d.text);
@@ -51,7 +51,7 @@ namespace SKRecording
         // Displays an annotation according to the provided RecordingData along with an x button to delete them
         // from the current list of annotations.
         // TODO: Maybe move into its own VRAnnotation class for standardization
-        public static void showDeletableAnnotation(RecordingData d, List<RecordingData> annots)
+        public static void showDeletableAnnotation(Label3D d, List<Label3D> annots)
         {
             UI.WindowBegin("", ref d.pose, UIWin.Body, UIMove.None);
             if (UI.Button("X")) 

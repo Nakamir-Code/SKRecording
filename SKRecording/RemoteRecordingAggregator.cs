@@ -22,7 +22,7 @@ namespace SKRecording
         // Are we connected to a server?
         bool connected = false;
 
-        public RemoteRecordingAggregator(Recorder[] recs, string ip, int port) : base(recs)
+        public RemoteRecordingAggregator(IRecorder[] recs, string ip, int port) : base(recs)
         {
             client = new RecordingTCPClient(ip, port);
             client.decodedFrame += onDecodedFrame;
@@ -81,7 +81,7 @@ namespace SKRecording
                 try
                 {
                     DeserializedRecordingArray deserialized = coder.Deserialize<DeserializedRecordingArray>(recording.Dequeue());
-                    RecordingData[] frame = deserialized.toRecordingDataArray();
+                    Label3D[] frame = deserialized.toRecordingDataArray();
                     int[] paramLengths = deserialized.getParamLengths();
 
                     displayAll(frame, paramLengths, anchorTRS);
@@ -114,7 +114,7 @@ namespace SKRecording
             }
 
             // Fetch the current recording data, serialize it, and send it off
-            RecordingData[] data = getCurrentRecordingData(anchorTRS);
+            Label3D[] data = getCurrentRecordingData(anchorTRS);
             int[] paramLengths = getCurrentParamLengths();
             
             string serializedRecording = coder.Serialize(DeserializedRecordingArray.fromRecordingDataArray(data, paramLengths));

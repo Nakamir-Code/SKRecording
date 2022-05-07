@@ -21,7 +21,7 @@ namespace SKRecording
         }
 
         // Displays the head with the first index of the RecordingData array provided
-        public void show(RecordingData[] data)
+        public void show(Label3D[] data)
         {
             headModel.RootNode.ModelTransform = Matrix.TRS(data[0].pose.position, data[0].pose.orientation * defaultRot, nodeScale);
             headModel.Draw(Matrix.Identity);

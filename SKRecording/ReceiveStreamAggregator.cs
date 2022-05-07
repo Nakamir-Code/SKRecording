@@ -20,7 +20,7 @@ namespace SKRecording
         // How many frames we wait until we assume the connection is gone
         private int timeout;
 
-        public ReceiveStreamAggregator(Recorder[] recs, string ip, int port, int timeoutFrames) : base(recs)
+        public ReceiveStreamAggregator(IRecorder[] recs, string ip, int port, int timeoutFrames) : base(recs)
         {
             // Beginning and end of JSON is { and }, seperator between frames is ;
             server = new TCPServer(ip, port, '{', '}', ';');
@@ -81,7 +81,7 @@ namespace SKRecording
                 try
                 {
                     DeserializedRecordingArray deserialized = coder.Deserialize<DeserializedRecordingArray>(frameJSON);
-                    RecordingData[] frame = deserialized.toRecordingDataArray();
+                    Label3D[] frame = deserialized.toRecordingDataArray();
                     int[] paramLengths = deserialized.getParamLengths();
 
                     displayAll(frame, paramLengths, anchorTRS);

@@ -17,15 +17,15 @@ namespace SKRecording
         public string[] texts { get; set; }
 
         // Converts from this DeserializedRecordingArray to an array of RecordingData
-        public RecordingData[] toRecordingDataArray()
+        public Label3D[] toRecordingDataArray()
         {
 
             // RecordingData arrays simply concatenate the RecordingData for the seperate objects behind each other
-            RecordingData[] result = new RecordingData[Utils.sum(paramLenghts)];
+            Label3D[] result = new Label3D[Utils.sum(paramLenghts)];
 
             for (int i = 0; i < result.Length; i++)
             {
-                result[i] = new RecordingData(new Pose(
+                result[i] = new Label3D(new Pose(
                     new System.Numerics.Vector3(this.Tvecs[i][0], this.Tvecs[i][1], this.Tvecs[i][2]),
                     new System.Numerics.Quaternion(this.Quats[i][0], this.Quats[i][1], this.Quats[i][2], this.Quats[i][3])),
                     this.texts[i]);
@@ -41,7 +41,7 @@ namespace SKRecording
         }
 
         // Converts an array of RecordingData to a DeserializedRecordingArray
-        public static DeserializedRecordingArray fromRecordingDataArray(RecordingData[] recordingData, int[] paramLengths)
+        public static DeserializedRecordingArray fromRecordingDataArray(Label3D[] recordingData, int[] paramLengths)
         {
             float[][] orientations = new float[recordingData.Length][];
             float[][] positions = new float[recordingData.Length][];
