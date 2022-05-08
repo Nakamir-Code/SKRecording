@@ -75,15 +75,13 @@ namespace SKRecording
                 new JointInfo(FingerId.Little, JointId.KnuckleMid,  null, false),
                 new JointInfo(FingerId.Little, JointId.KnuckleMinor,null, false) };
 
-            //adding the rig bones to the ointinfo class
+            // adding the rig bones to the ointinfo class
             for (int i = 0; i < jointInfo.Length; i++)
-            {
-                
+            {    
                 if (jointInfo[i].rootBone)
                 {
                     string jointName = "Hand.Wrist." + whichHand.ToString();
-                    jointInfo[i].node = handModel.FindNode(jointName);
-
+                    jointInfo[i].node = handModel.FindNode(jointName);   
                 }
                 else
                 {
@@ -118,8 +116,6 @@ namespace SKRecording
                     j.node.ModelTransform = Matrix.TRS(joint.position, joint.orientation * defaultBoneRot, nodeScale);
                 }
             }
-
-
             handModel.Draw(Matrix.Identity);
         }
 

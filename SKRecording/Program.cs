@@ -44,11 +44,11 @@ namespace SKRecording
             List<Label3D> labels = new List<Label3D>();
 
             // Create Recorders for all objects we want to track
-            HandRecorder rightRecorder = new HandRecorder(Handed.Right);
-            HandRecorder leftRecorder = new HandRecorder(Handed.Left);
-            HeadRecorder headRecorder = new HeadRecorder();
-            AnnotationRecorder annotationRecorder = new AnnotationRecorder(labels);
-            IRecorder[] recorders = new IRecorder[] { headRecorder, rightRecorder, leftRecorder, annotationRecorder };
+            HandTrackerShower rightHandTrackerShower = new HandTrackerShower(Handed.Right);
+            HandTrackerShower leftHandTrackerShower = new HandTrackerShower(Handed.Left);
+            HeadTrackerShower headTrackerShower = new HeadTrackerShower();
+            AnnotationTrackerShower annotationTrackerShower = new AnnotationTrackerShower(labels);
+            IPoseTrackerShower[] trackersAndShowers = new IPoseTrackerShower[] { headTrackerShower, rightHandTrackerShower, leftHandTrackerShower, annotationTrackerShower };
 
 
             // Server we connect to 
@@ -59,8 +59,8 @@ namespace SKRecording
             string myIP = Utils.GetLocalIPAddress();
 
             // Recordingaggregators (Here for streaming & server-side recording)
-            RecordingAggregator aggregator = new RemoteRecordingAggregator(recorders,IP,port);
-            RecordingAggregator streamReceiver = new ReceiveStreamAggregator(recorders, myIP, port, 100);
+            RecordingAggregator aggregator = new RemoteRecordingAggregator(trackersAndShowers,IP,port);
+            RecordingAggregator streamReceiver = new ReceiveStreamAggregator(trackersAndShowers, myIP, port, 100);
 
             // Annotation UI Setup
             Pose annotationMenuPose = new Pose(0, 0.1f, -0.2f, Quat.LookDir(0, 0, 1));
@@ -136,7 +136,7 @@ namespace SKRecording
                     addingAnnotation = UI.Button("Add Annotation");
                 }
 
-                UI.WindowEnd();
+            UI.WindowEnd();
 
                 // If we are not currently playbacking/receiving a different stream, display the locally created annotations
                 if(!playing && !receivingStream)

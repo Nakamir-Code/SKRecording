@@ -11,7 +11,7 @@ namespace SKRecording
         // JSON en- and decoder
         JsonCoder coder;
 
-        public DynamicRecorderAggregator(IRecorder[] recorders): base(recorders)
+        public DynamicRecorderAggregator(IPoseTrackerShower[] recorders): base(recorders)
         {
             this.recording = new Queue<string>();
             this.coder = new JsonCoder();

@@ -3,12 +3,13 @@
 namespace SKRecording
 {
     // Recorder instance for tracking a Head
-    class HeadRecorder : IRecorder
+    class HeadTrackerShower : IPoseTrackerShower
+
     {
         // The model to display
         private ModelWrapper headModel;
 
-        public HeadRecorder()
+        public HeadTrackerShower()
         {
             headModel = new VRHead();
         }

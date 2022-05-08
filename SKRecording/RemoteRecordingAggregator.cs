@@ -22,7 +22,7 @@ namespace SKRecording
         // Are we connected to a server?
         bool connected = false;
 
-        public RemoteRecordingAggregator(IRecorder[] recs, string ip, int port) : base(recs)
+        public RemoteRecordingAggregator(IPoseTrackerShower[] recs, string ip, int port) : base(recs)
         {
             client = new RecordingTCPClient(ip, port);
             client.decodedFrame += onDecodedFrame;

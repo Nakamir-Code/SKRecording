@@ -71,20 +71,20 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AnnotationRecorder.cs" />
+    <Compile Include="AnnotationTrackerShower.cs" />
     <Compile Include="DeserializedRecordingArray.cs" />
     <Compile Include="DeserializedPose.cs" />
     <Compile Include="DynamicRecorderAggregator.cs" />
-    <Compile Include="HandRecorder.cs" />
-    <Compile Include="HeadRecorder.cs" />
+    <Compile Include="HandTrackerShower.cs" />
+    <Compile Include="HeadTrackerShower.cs" />
     <Compile Include="JSONCoder.cs" />
     <Compile Include="ModelWrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReceiveStreamAggregator.cs" />
-    <Compile Include="Recorder.cs" />
+    <Compile Include="IPoseTrackerShower.cs" />
     <Compile Include="RecordingAggregator.cs" />
-    <Compile Include="RecordingData.cs" />
+    <Compile Include="Label3D.cs" />
     <Compile Include="RecordingTCPClient.cs" />
     <Compile Include="RemoteRecordingAggregator.cs" />
     <Compile Include="StreamerWrapper.cs" />

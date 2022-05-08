@@ -5,6 +5,7 @@ namespace SKRecording
     // Global class that is passed around containing data for one object in one frame 
     public class Label3D
     {
+        // TODO: put timestamp.
         public Pose pose;
         public string text;
         public Label3D(Pose pose, string text)

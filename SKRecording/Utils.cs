@@ -42,10 +42,9 @@ namespace SKRecording
         // TODO: Maybe move into its own VRAnnotation class for standardization
         public static void showAnnotation(Label3D d)
         {
-            UI.WindowBegin("", ref d.pose, UIWin.Body, UIMove.None);
+            UI.WindowBegin("", ref d.pose, UIWin.Body, UIMove.None);  // TODO: why not show using stereokit.Text.Add()
             UI.Label(d.text);
             UI.WindowEnd();
-
         }
 
         // Displays an annotation according to the provided RecordingData along with an x button to delete them

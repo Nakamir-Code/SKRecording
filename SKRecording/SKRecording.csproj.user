@@ -18,7 +18,7 @@
     <DeviceId>30f105c9-681e-420b-a277-7c086ead8a4e</DeviceId>
     <UseEmulator>false</UseEmulator>
     <RemoteDebugMachine>10.0.0.7</RemoteDebugMachine>
-    <AuthenticationMode>Universal</AuthenticationMode>
+    <AuthenticationMode>Windows</AuthenticationMode>
     <RemoteDebugEnabled>true</RemoteDebugEnabled>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>

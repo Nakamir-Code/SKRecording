@@ -72,7 +72,7 @@ class SimpleTCPServer():
                 connection.close()
 
 def main():
-    server = SimpleTCPServer("10.0.0.4", 12345)
+    server = SimpleTCPServer("127.0.0.1", 12345)
     server.start()
 
 if __name__ == "__main__":

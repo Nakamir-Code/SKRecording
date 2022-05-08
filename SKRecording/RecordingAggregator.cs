@@ -9,12 +9,12 @@ namespace SKRecording
     {
 
         // Recorders this instance keeps track off
-        private IRecorder[] recorders;
+        private IPoseTrackerShower[] recorders;
         // Buffer for temporarily storing one frame of data before the child class decides how to permanently store it
         private Label3D[] recordingDataAggregator;
         
 
-        protected RecordingAggregator(IRecorder[] recorders)
+        protected RecordingAggregator(IPoseTrackerShower[] recorders)
         {
             this.recorders = recorders;
             recordingDataAggregator = new Label3D[getObjectCount()];
@@ -85,7 +85,7 @@ namespace SKRecording
         protected int getObjectCount()
         {
             int objectCount = 0;
-            foreach (IRecorder r in recorders)
+            foreach (IPoseTrackerShower r in recorders)
             {
                 objectCount += r.getObjectCount();
             }

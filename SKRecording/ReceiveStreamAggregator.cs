@@ -20,7 +20,7 @@ namespace SKRecording
         // How many frames we wait until we assume the connection is gone
         private int timeout;
 
-        public ReceiveStreamAggregator(IRecorder[] recs, string ip, int port, int timeoutFrames) : base(recs)
+        public ReceiveStreamAggregator(IPoseTrackerShower[] recs, string ip, int port, int timeoutFrames) : base(recs)
         {
             // Beginning and end of JSON is { and }, seperator between frames is ;
             server = new TCPServer(ip, port, '{', '}', ';');
