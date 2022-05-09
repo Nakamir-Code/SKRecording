@@ -107,7 +107,7 @@ namespace SKRecording
         }
 
         // Not meant to be used
-        public override void RecordOneFrame(Matrix anchorTRS)
+        public override void StreamOneFrame(Matrix anchorTRS)
         {
             throw new InvalidOperationException("ReceiveStreamAggregator can only receive");
         }

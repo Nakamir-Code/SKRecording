@@ -30,7 +30,7 @@ namespace SKRecording
         // One head, so we return 1
         public int getObjectCount()
         {
-            return 1;
+            return 1; // TODO: returning constants does't make this clsss reusable.
         }
     }
 }

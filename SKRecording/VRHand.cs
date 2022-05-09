@@ -34,7 +34,6 @@ namespace SKRecording
 
         public VRHand(Handed whichHand)
         {
-
             string modelName = "Hand_" + whichHand.ToString() + ".glb";
             handModel = Model.FromFile(modelName);
             nodeScale = 1;
@@ -46,6 +45,7 @@ namespace SKRecording
                 //making sure the high performaance mat is applied
                 node.Material = Material.Default;
             }
+        
             //instantiating the jointinfo class with all the relevant fields set  
             jointInfo = new JointInfo[] {
                 // currently SK doesn't have an enum for wrist but populates the thumb root and knucklemajor with the same value,

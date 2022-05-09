@@ -102,8 +102,9 @@ namespace SKRecording
                 }
 
             
-            // Logic for main menu
-            UI.WindowBegin("Main Menu", ref mainMenuPose, new Vec2(20, 0) * U.cm);
+                // Logic for main menu
+                UI.WindowBegin("Main Menu", ref mainMenuPose, new Vec2(20, 0) * U.cm);
+
                 // If we are not doing anything, allow the user to start a recording
                 if (!playing && !receivingStream && !streaming) // TODO: create a single state to use
                 {
@@ -136,8 +137,10 @@ namespace SKRecording
                     addingAnnotation = UI.Button("Add Annotation");
                 }
 
-            UI.WindowEnd();
+                UI.WindowEnd();
 
+                
+                
                 // If we are not currently playbacking/receiving a different stream, display the locally created annotations
                 if(!playing && !receivingStream)
                 {
@@ -147,11 +150,10 @@ namespace SKRecording
                     }
                 }
 
-
                 // If we are recording or streaming (equivalent in this case), call record on the recordingaggregator
                 if (recording || streaming)
                 {
-                    aggregator.RecordOneFrame(mainMenuPose.ToMatrix());
+                    aggregator.StreamOneFrame(mainMenuPose.ToMatrix());
                 }
 
                 // If we are instead playbacking, try playbacking from the aggregator and end the playback if this call fails

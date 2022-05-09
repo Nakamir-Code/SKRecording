@@ -32,7 +32,7 @@ namespace SKRecording
         // Each hand tracks 26 joints
         public int getObjectCount()
         {
-            return Constants.Count;
+            return Constants.Count;  // TODO: returning constants doesn't make this class reusable
         }
 
 

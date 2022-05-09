@@ -7,66 +7,66 @@ namespace SKRecording
     // child classes to inherit is how they store and fetch the recorded data.
     abstract class RecordingAggregator
     {
-
         // Recorders this instance keeps track off
-        private IPoseTrackerShower[] recorders;
+        private IPoseTrackerShower[] _poseTrackerShowerList;
         // Buffer for temporarily storing one frame of data before the child class decides how to permanently store it
-        private Label3D[] recordingDataAggregator;
+        private Label3D[] _labels;
         
-
         protected RecordingAggregator(IPoseTrackerShower[] recorders)
         {
-            this.recorders = recorders;
-            recordingDataAggregator = new Label3D[getObjectCount()];
+            this._poseTrackerShowerList = recorders;
+            _labels = new Label3D[getObjectCount()];
         }
 
         // Returns an array representing the data captured in the current frame relative to the provided anchor.
         protected Label3D[] getCurrentRecordingData(Matrix worldAnchorTRS)
         {
             // Check if some objects were deleted/added and adjust buffer size accordingly
-            if(recordingDataAggregator.Length != getObjectCount())
+            if(_labels.Length != getObjectCount())
             {
-                Array.Resize(ref recordingDataAggregator, getObjectCount());
+                Array.Resize(ref _labels, getObjectCount()); // TODO: why not just use list?
             }
             int recAggIndex = 0;
 
-            // We get the poses relative to worldspace and need to convert them to being relative to our anchor
+            // We get the poses relative to worldspace and need to convert them to being relative to our anchor // TODO: move this to the server side
             Matrix inversedWorldAnchor = worldAnchorTRS.Inverse;
-            for( int i = 0; i<recorders.Length; i++)
+            
+            for( int i = 0; i<_poseTrackerShowerList.Length; i++)
             {
-                Label3D[] recordingData = recorders[i].getCurrentFrame();
+                Label3D[] recordingData = _poseTrackerShowerList[i].getCurrentFrame();
                 for(int j =0; j<recordingData.Length; j++)
                 {
                     // The correct multiplication is inversedWorldAnchor * pose. However, matrix multiplication in C# is inverted, meaning if we want to 
                     // do  A * B, what we write in C# is B*A. More info here: https://stackoverflow.com/questions/58712092/matrix-struct-gives-wrong-output
-                    recordingDataAggregator[recAggIndex] = recordingData[j].clone();
-                    recordingDataAggregator[recAggIndex].pose = (recordingData[j].pose.ToMatrix() * inversedWorldAnchor).Pose;
+                    _labels[recAggIndex] = recordingData[j].clone();  // TODO: This is expensive!
+                    _labels[recAggIndex].pose = (recordingData[j].pose.ToMatrix() * inversedWorldAnchor).Pose;
                     recAggIndex++;
                 }
             }
 
-            return recordingDataAggregator;
+            return _labels;
         }
 
         // Returns an array where each index is the amount of objects each recorder at that index is tracking 
         protected int[] getCurrentParamLengths()
         {
-            int[] pLengths = new int[recorders.Length];
-            for(int i = 0; i<recorders.Length; i++)
+            int[] pLengths = new int[_poseTrackerShowerList.Length];
+            for(int i = 0; i<_poseTrackerShowerList.Length; i++)
             {
-                pLengths[i] = recorders[i].getObjectCount();
+                pLengths[i] = _poseTrackerShowerList[i].getObjectCount();
             }
 
             return pLengths;
 
         }
+        
         // Displays the objects its recorders are tracking using the provided RecordingData which expected to be relative to the provided anchor.
         protected void displayAll(Label3D[] recorderDatas, int[] paramLengths, Matrix worldAnchorTRS)
         {
             int recAggIndex = 0;
 
             // We get the poses relative to the anchor and need to convert them to worldspace.
-            for (int i = 0; i<recorders.Length; i++)
+            for (int i = 0; i<_poseTrackerShowerList.Length; i++)
             {
                 Label3D[] toDisplay = new Label3D[paramLengths[i]];
                 for (int j = 0; j < toDisplay.Length; j++)
@@ -77,7 +77,7 @@ namespace SKRecording
                     toDisplay[j].pose = (recorderDatas[recAggIndex].pose.ToMatrix() * worldAnchorTRS).Pose;
                     recAggIndex++;
                 }
-                recorders[i].displayFrame(toDisplay);
+                _poseTrackerShowerList[i].displayFrame(toDisplay);
             }
         }
 
@@ -85,7 +85,7 @@ namespace SKRecording
         protected int getObjectCount()
         {
             int objectCount = 0;
-            foreach (IPoseTrackerShower r in recorders)
+            foreach (IPoseTrackerShower r in _poseTrackerShowerList)
             {
                 objectCount += r.getObjectCount();
             }
@@ -107,7 +107,7 @@ namespace SKRecording
 
         // To be implemented by inheritors
         public abstract bool PlaybackOneFrame(Matrix anchorTRS);
-        public abstract void RecordOneFrame(Matrix anchorTRS);
+        public abstract void StreamOneFrame(Matrix anchorTRS);
         public abstract bool hasRecording();
 
     }

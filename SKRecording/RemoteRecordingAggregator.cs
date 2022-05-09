@@ -12,38 +12,38 @@ namespace SKRecording
     class RemoteRecordingAggregator : RecordingAggregator
     {
         // Client for sending recording data
-        private RecordingTCPClient client;
+        private RecordingTCPClient _client;
         // For receiving recording data from a server
-        Queue<string> recording;
+        Queue<string> _recording;
         // Encode and decode JSON strings
-        JsonCoder coder;
+        JsonCoder _coder;
         // Are we currently playbacking data?
-        bool initiatedPlayback = false;
+        bool _initiatedPlayback = false;
         // Are we connected to a server?
-        bool connected = false;
+        bool _connected = false;
 
         public RemoteRecordingAggregator(IPoseTrackerShower[] recs, string ip, int port) : base(recs)
         {
-            client = new RecordingTCPClient(ip, port);
-            client.decodedFrame += onDecodedFrame;
-            this.recording = new Queue<string>();
-            this.coder = new JsonCoder();
+            _client = new RecordingTCPClient(ip, port);
+            _client.decodedFrame += onDecodedFrame;
+            this._recording = new Queue<string>();
+            this._coder = new JsonCoder();
         }
 
         // If we receive a decoded frame, save it for playback later
         private void onDecodedFrame(object sender, string[] decoded)
         {
-            lock (recording)
+            lock (_recording)
             {
                 for (int i = 0; i < decoded.Length; i++)
                 {
-                    recording.Enqueue(decoded[i]);
+                    _recording.Enqueue(decoded[i]);
                 }
             }
         }
 
         // Assume the server always has a recording
-        public override bool hasRecording()
+        public override bool hasRecording() // TODO: if always true, why create a function for this!
         {
             return true;
         }
@@ -51,27 +51,27 @@ namespace SKRecording
         // Playback the last frame in the queue relative to the provided anchor
         public override bool PlaybackOneFrame(Matrix anchorTRS)
         {
-            if (!connected)
+            if (!_connected)
             {
-                client.connect();
-                connected = true;
+                _client.connect();
+                _connected = true;
             }
 
             // Request the recording from the server using a 'P' packet.
-            if (!initiatedPlayback)
+            if (!_initiatedPlayback)
             {
-                client.send("P", true);
-                initiatedPlayback = true;
+                _client.send("P", true);
+                _initiatedPlayback = true;
                 // We don't receive anything on the first invokation yet, but return true to indicate stream is still going
                 return true;
             }
 
             // Check if we have a JSON string to playback
             string frameJSON = null;
-            lock (recording)
+            lock (_recording)
             {
-                if (recording.Count != 0) {
-                    frameJSON = recording.Dequeue();
+                if (_recording.Count != 0) {
+                    frameJSON = _recording.Dequeue();
                 }
             }
 
@@ -80,7 +80,7 @@ namespace SKRecording
                 // If we do it, deserialize it into RecordingData[] and display it using the logic of the associated Recorders.
                 try
                 {
-                    DeserializedRecordingArray deserialized = coder.Deserialize<DeserializedRecordingArray>(recording.Dequeue());
+                    DeserializedRecordingArray deserialized = _coder.Deserialize<DeserializedRecordingArray>(_recording.Dequeue());
                     Label3D[] frame = deserialized.toRecordingDataArray();
                     int[] paramLengths = deserialized.getParamLengths();
 
@@ -94,10 +94,10 @@ namespace SKRecording
             }
 
             // If the recordings over, reset variables
-            if (client.hasReceivedAll() && recording.Count == 0)
+            if (_client.hasReceivedAll() && _recording.Count == 0)
             {
-                client.reset();
-                initiatedPlayback = false;
+                _client.reset();
+                _initiatedPlayback = false;
                 return false;
             }
 
@@ -105,35 +105,35 @@ namespace SKRecording
         }
 
         // Record/Stream one frame to the server relative to the provided anchor
-        public override void RecordOneFrame(Matrix anchorTRS)
+        public override void StreamOneFrame(Matrix anchorTRS)
         {
-            if (!connected)
+            if (!_connected)
             {
-                client.connect();
-                connected = true;
+                _client.connect();
+                _connected = true;
             }
 
             // Fetch the current recording data, serialize it, and send it off
-            Label3D[] data = getCurrentRecordingData(anchorTRS);
+            Label3D[] labels = getCurrentRecordingData(anchorTRS);
             int[] paramLengths = getCurrentParamLengths();
             
-            string serializedRecording = coder.Serialize(DeserializedRecordingArray.fromRecordingDataArray(data, paramLengths));
-            client.send(serializedRecording);
+            string serializedRecording = _coder.Serialize(DeserializedRecordingArray.fromRecordingDataArray(labels, paramLengths));
+            _client.send(serializedRecording);
         }
 
         // Reset & disconnect the client upon finishing playback
         public override void finishPlayback()
         {
-            client.reset();
-            connected = false;
-            initiatedPlayback = false;
+            _client.reset();
+            _connected = false;
+            _initiatedPlayback = false;
         }
 
         // Reset & disconnect the client upon finishing playback
         public override void finishRecording()
         {
-            client.reset();
-            connected = false;
+            _client.reset();
+            _connected = false;
         }
 
 

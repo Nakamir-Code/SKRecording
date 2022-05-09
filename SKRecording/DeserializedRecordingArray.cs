@@ -3,7 +3,9 @@
 namespace SKRecording
 {
     // Intermediate class for converting between RecordingData arrays and JSON strings
-    public class DeserializedRecordingArray
+    public class DeserializedRecordingArray  // TODO: The structure here eliminates the Json's main advantage: Flexibility.
+        // with the structure here, there is now way to understand for anyone other than the author of this code 
+        // the meaning of the different contents. 
     {
         // Tracks the length of each Recorder we're tracking.
         // E.g. We have a HeadRecorder and an AnnotationRecorder with 4 annotations. 

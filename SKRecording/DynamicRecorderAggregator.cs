@@ -18,7 +18,7 @@ namespace SKRecording
         }
 
         // Converts one frame of RecordingData to JSON and saves it to the queue relative to the provided anchor
-        public override void RecordOneFrame(Matrix anchorTRS)
+        public override void StreamOneFrame(Matrix anchorTRS)
         {
             // Fetch the current frame data relative to the provided anchor
             Label3D[] poses = getCurrentRecordingData(anchorTRS);
