@@ -7,9 +7,10 @@ namespace SKRecording
     static class Constants
     {
         // Server we connect to 
-        public const string IP = "192.168.1.159";
+        public const string IP = "10.0.0.3";
         public const int port = 12345;
         public const int Count = 26; // how many joints per hand
+        public const int recordingFrameRate = 10;
     }
     // Main program class
     class Program
@@ -38,15 +39,10 @@ namespace SKRecording
                 END SK Boilerplate 
             */
 
-
-            // List to track annotations in
-            List<RecordingData> annotations = new List<RecordingData>();
             // Create Recorders for all objects we want to track
             HandRecorder rightRecorder = new HandRecorder(Handed.Right);
             HandRecorder leftRecorder = new HandRecorder(Handed.Left);
             HeadRecorder headRecorder = new HeadRecorder();
-            AnnotationRecorder annotationRecorder = new AnnotationRecorder(annotations);
-
 
             // Server we connect to 
             string IP = Constants.IP;
@@ -54,14 +50,13 @@ namespace SKRecording
             // Our IP
             string myIP = Utils.GetLocalIPAddress();
 
-            Recorder[] recorders = new Recorder[] { headRecorder, rightRecorder, leftRecorder, annotationRecorder };
+            Recorder[] recorders = new Recorder[] { headRecorder, rightRecorder, leftRecorder };
             // Recordingaggregators (Here for streaming & server-side recording)
             RecordingAggregator aggregator = new RemoteRecordingAggregator(recorders,IP,port);
             RecordingAggregator streamReceiver = new ReceiveStreamAggregator(recorders, myIP, port, 100);
 
             // Information for window to add annotation
             Pose windowPoseInput = new Pose(0, 0.1f, -0.2f, Quat.LookDir(0, 0, 1));
-            string inputState = "Enter annotation text";
             
             // Information for main control window
             Pose windowPose = new Pose(0, 0.2f, -0.3f, Quat.LookDir(0, 0, 1));
@@ -72,39 +67,20 @@ namespace SKRecording
             bool streaming = false;
             bool wasRecording = false;
             bool receivingStream = false;
-            bool addingAnnotation = false;
+
+            // this time should elapse between recorded frames
+            float sPerFrame = 1f / Constants.recordingFrameRate;
+
+            float lastFrameTime = 0;
 
             // Core application loop
             while (SK.Step(() =>
-            {
-
+            {   
+                windowPoseInput = Input.Head;
                 
-                if (addingAnnotation)
-                {
-                    // If we are adding an annotation, display the annotation window
-                    UI.WindowBegin("New annotation", ref windowPoseInput);
-                    if (UI.Button("Done"))
-                    {
-                        // Add the inputted annotation to the list of annotations
-                        annotations.Add(new RecordingData(windowPoseInput, inputState));
-                        addingAnnotation = false;
-                        inputState = "Enter annotation text";
-                    }
-
-                    UI.Input("AnnotationText", ref inputState, default, TextContext.Text);
-                        
-
-                    UI.WindowEnd();
-                }
-                // If we don't have to display the annotation window, just have it invisible in the user's head
-                else
-                {
-                    windowPoseInput = Input.Head;
-                }
-
 
             // Logic for main control window
-            UI.WindowBegin("Window", ref windowPose, new Vec2(20, 0) * U.cm);
+                UI.WindowBegin("Window", ref windowPose, new Vec2(20, 0) * U.cm);
                 // If we are not doing anything, allow the user to start a recording
                 if (!playing && !receivingStream && !streaming)
                 {
@@ -127,28 +103,18 @@ namespace SKRecording
                 {
                     UI.Toggle(receivingStream ? "Stop Receiving" : "Start Receiving", ref receivingStream);
                 }
-                // If we are not already adding an annotation, allow the user to add an annotation
-                if (!addingAnnotation)
-                {
-                    addingAnnotation = UI.Button("Add Annotation");
-                }
-
+               
                 UI.WindowEnd();
-
-                // If we are not currently playbacking/receiving a different stream, display the locally created annotations
-                if(!playing && !receivingStream)
-                {
-                    for (int i = 0; i < annotations.Count; i++)
-                    {
-                        Utils.showDeletableAnnotation(annotations[i],annotations);
-                    }
-                }
 
 
                 // If we are recording or streaming (equivalent in this case), call record on the recordingaggregator
                 if (recording || streaming)
                 {
-                    aggregator.RecordOneFrame(windowPose.ToMatrix());
+                    if ((Time.Totalf - lastFrameTime) > sPerFrame)
+                    {
+                        aggregator.RecordOneFrame(windowPose.ToMatrix());
+                        lastFrameTime = Time.Totalf;
+                    }
                 }
                 // If we are instead playbacking, try playbacking from the aggregator and end the playback if this call fails
                 else if (playing)

@@ -13,8 +13,8 @@ namespace SKRecording
         public float[][] Quats { get; set; }
         // Position of each object we're tracking
         public float[][] Tvecs { get; set; }
-        // Text associated with each object we're tracking (currently only used by AnnotationRecorder)
-        public string[] texts { get; set; }
+        // Timestamp associated with each object we're tracking
+        public float[] timeStamp { get; set; }
 
         // Converts from this DeserializedRecordingArray to an array of RecordingData
         public RecordingData[] toRecordingDataArray()
@@ -27,8 +27,7 @@ namespace SKRecording
             {
                 result[i] = new RecordingData(new Pose(
                     new System.Numerics.Vector3(this.Tvecs[i][0], this.Tvecs[i][1], this.Tvecs[i][2]),
-                    new System.Numerics.Quaternion(this.Quats[i][0], this.Quats[i][1], this.Quats[i][2], this.Quats[i][3])),
-                    this.texts[i]);
+                    new System.Numerics.Quaternion(this.Quats[i][0], this.Quats[i][1], this.Quats[i][2], this.Quats[i][3])), this.timeStamp[i]);
             }
 
             return result;
@@ -45,7 +44,7 @@ namespace SKRecording
         {
             float[][] orientations = new float[recordingData.Length][];
             float[][] positions = new float[recordingData.Length][];
-            string[] texts = new string[recordingData.Length];
+            float[] timeArray = new float[recordingData.Length];
 
             for (int i = 0; i < recordingData.Length; i++)
             {
@@ -54,7 +53,7 @@ namespace SKRecording
                 float[] positionArray = { recordingData[i].pose.position.v.X, recordingData[i].pose.position.v.Y, recordingData[i].pose.position.v.Z };
                 positions[i] = positionArray;
 
-                texts[i] = recordingData[i].text;
+                timeArray[i] = recordingData[i].timeStamp;
 
             }
 
@@ -62,7 +61,7 @@ namespace SKRecording
             deserializedRecordingArray.paramLenghts = paramLengths;
             deserializedRecordingArray.Quats = orientations;
             deserializedRecordingArray.Tvecs = positions;
-            deserializedRecordingArray.texts = texts;
+            deserializedRecordingArray.timeStamp = timeArray;
             return deserializedRecordingArray;
         }
 

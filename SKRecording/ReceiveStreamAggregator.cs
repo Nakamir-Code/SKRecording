@@ -85,7 +85,6 @@ namespace SKRecording
                     int[] paramLengths = deserialized.getParamLengths();
 
                     displayAll(frame, paramLengths, anchorTRS);
-
                 }
                 catch (Exception e)
                 {
