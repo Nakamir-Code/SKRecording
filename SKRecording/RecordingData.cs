@@ -7,19 +7,16 @@ namespace SKRecording
     {
         public Pose pose;
         public string text;
-        public RecordingData(Pose pose, string text)
+        public float timeStamp;
+        
+        public RecordingData(Pose pose, float timeStamp)
         {
             this.pose = pose;
-            this.text = text;
-        }
-        public RecordingData(Pose pose)
-        {
-            this.pose = pose;
-            this.text = "";
+            this.timeStamp = timeStamp;
         }
         public RecordingData clone()
         {
-            return new RecordingData(this.pose, this.text);
+            return new RecordingData(this.pose, this.timeStamp);
         }
     }
 }

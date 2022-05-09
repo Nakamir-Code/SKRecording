@@ -16,7 +16,7 @@ namespace SKRecording
         // Returns a one length array of RecordingData, that of the head that is being tracked
         public RecordingData[] getCurrentFrame()
         {
-            RecordingData[] res = { new RecordingData(Input.Head) };
+            RecordingData[] res = { new RecordingData(Input.Head, Time.Totalf) };
             return res;
         }
 

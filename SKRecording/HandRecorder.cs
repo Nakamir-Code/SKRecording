@@ -9,6 +9,7 @@ namespace SKRecording
         private ModelWrapper handModel;
         // Which hand are we tracking (right or left)
         private Handed whichHand;
+        private Pose lastpose;
 
         public HandRecorder(Handed whichHand)
         {
@@ -42,9 +43,9 @@ namespace SKRecording
             
             for (int i = 0; i < joints.Length; i++)
             {
-                recordingData[i] = new RecordingData(new Pose(joints[i].position, joints[i].orientation));
+                recordingData[i] = new RecordingData(new Pose(joints[i].position, joints[i].orientation), Time.Totalf);
             }
-            recordingData[joints.Length] = new RecordingData(Input.Hand(whichHand).wrist);
+            recordingData[joints.Length] = new RecordingData(Input.Hand(whichHand).wrist, Time.Totalf);
             return recordingData;
         }
     }

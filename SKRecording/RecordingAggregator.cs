@@ -40,7 +40,7 @@ namespace SKRecording
                     // The correct multiplication is inversedWorldAnchor * pose. However, matrix multiplication in C# is inverted, meaning if we want to 
                     // do  A * B, what we write in C# is B*A. More info here: https://stackoverflow.com/questions/58712092/matrix-struct-gives-wrong-output
                     recordingDataAggregator[recAggIndex] = recordingData[j].clone();
-                    recordingDataAggregator[recAggIndex].pose = (recordingData[j].pose.ToMatrix() * inversedWorldAnchor).Pose;
+                    recordingDataAggregator[recAggIndex].pose = (recordingData[j].pose.ToMatrix() * inversedWorldAnchor).Pose;                    
                     recAggIndex++;
                 }
             }
